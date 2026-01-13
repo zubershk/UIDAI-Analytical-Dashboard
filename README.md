@@ -10,8 +10,29 @@ A **production-grade**, state-level analytical system to detect **declining Aadh
 
 ---
 
+<<<<<<< HEAD
 ## 🔗 Live Dashboard
 **[➡️ View Interactive Dashboard](https://uidai-analytical-dash.streamlit.app/)**
+=======
+## Live Dashboard
+[UIDAI Dashboard](https://uidai-analytical-dash.streamlit.app/)
+
+---
+
+## 1. Problem Context
+
+Aadhaar enrolment and update services are critical national infrastructure.  
+However, **update activity does not remain uniform over time or geography**.
+
+Key operational questions faced by administrators include:
+
+- Which states show **persistent low update activity**?
+- Where is update engagement **declining over time**?
+- Which regions should be **prioritized for intervention**?
+- How can this be detected **early**, using data alone?
+
+This project addresses these questions by building a **reproducible, state-level analytical framework** and deploying it as a **live, interactive dashboard**.
+>>>>>>> afe1f7133e6678ccf4d678355e15526142171cd5
 
 ---
 
@@ -252,6 +273,7 @@ statsmodels >= 0.14.0
 numpy >= 1.24.0
 ```
 
+<<<<<<< HEAD
 Install all: `pip install -r requirements.txt`
 
 ---
@@ -358,3 +380,9 @@ For questions or issues:
 [Live Dashboard](https://uidai-analytical-dash.streamlit.app/) • [GitHub](https://github.com/zubershk/UIDAI-Analytical-Dashboard) • [Methodology](METHODOLOGY.md)
 
 </div>
+=======
+### Run the Dashboard
+```bash
+streamlit run app.py
+```
+>>>>>>> afe1f7133e6678ccf4d678355e15526142171cd5
