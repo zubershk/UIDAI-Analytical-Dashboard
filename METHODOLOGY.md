@@ -310,7 +310,7 @@ plotly 5.17+
 ### 11.2 Execution Steps
 ```bash
 # 1. Clone repository
-git clone <repo_url>
+git clone https://github.com/zubershk/UIDAI-Analytical-Dashboard
 
 # 2. Install dependencies
 pip install -r requirements.txt
