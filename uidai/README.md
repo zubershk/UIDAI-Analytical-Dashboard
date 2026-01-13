@@ -5,6 +5,11 @@ A state-level analytical system to detect **declining Aadhaar update activity**,
 
 ---
 
+## Live Dashboard
+[UIDAI Dashboard](https://uidai-analytical-dash.streamlit.app/)
+
+---
+
 ## 1. Problem Context
 
 Aadhaar enrolment and update services are critical national infrastructure.  
