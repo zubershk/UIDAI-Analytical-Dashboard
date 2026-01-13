@@ -6,7 +6,7 @@
 ![Analysis](https://img.shields.io/badge/Analysis-Statistical-orange)
 ![License](https://img.shields.io/badge/License-Government%20Use-red)
 
-A **production-grade**, state-level analytical system to detect **declining Aadhaar update activity**, identify **priority regions**, and support **evidence-based administrative decision-making** using anonymized UIDAI datasets.
+A **production-grade**, state-level analytical system to detect **declining Aadhaar update activity**, identify **priority regions**, and support **evidence-based administrative decision-making.**
 
 ---
 
