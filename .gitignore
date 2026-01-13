@@ -1,2 +1,40 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-.ipynb_checkpoints/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project-specific
+/run.sh
+
+# Raw data partitions (too large for Git)
+data/biometric/api_data_*.csv
+data/demographic/api_data_*.csv
+data/enrolment/api_data_*.csv
+
+# Logs
+*.log
