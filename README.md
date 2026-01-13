@@ -272,6 +272,14 @@ Install all: `pip install -r requirements.txt`
 
 ---
 
+### Run the Dashboard
+
+```bash
+streamlit run app.py
+```
+
+---
+
 ## 📊 Data Usage
 
 ### Source
@@ -374,9 +382,4 @@ For questions or issues:
 [Live Dashboard](https://uidai-analytical-dash.streamlit.app/) • [GitHub](https://github.com/zubershk/UIDAI-Analytical-Dashboard) • [Methodology](METHODOLOGY.md)
 
 </div>
-
-### Run the Dashboard
-```bash
-streamlit run app.py
-```
 
