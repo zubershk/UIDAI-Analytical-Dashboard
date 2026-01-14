@@ -6,9 +6,13 @@
 ![Analysis](https://img.shields.io/badge/Analysis-Statistical-orange)
 ![License](https://img.shields.io/badge/License-Government%20Use-red)
 
-A **production-grade**, state-level analytical system to detect **declining Aadhaar update activity**, identify **priority regions**, and support **evidence-based administrative decision-making** using anonymized UIDAI datasets.
+A **production-grade**, state-level analytical system to detect **declining Aadhaar update activity**, identify **priority regions**, and support **evidence-based administrative decision-making.**
 
 ---
+
+
+## 🔗 Live Dashboard
+**[➡️ View Interactive Dashboard](https://uidai-analytical-dash.streamlit.app/)**
 
 ## Live Dashboard
 [UIDAI Dashboard](https://uidai-analytical-dash.streamlit.app/)
@@ -298,6 +302,14 @@ Install all: `pip install -r requirements.txt`
 
 ---
 
+### Run the Dashboard
+
+```bash
+streamlit run app.py
+```
+
+---
+
 ## Data Usage
 
 ### Source
@@ -400,3 +412,4 @@ For questions or issues:
 [Live Dashboard](https://uidai-analytical-dash.streamlit.app/) • [GitHub](https://github.com/zubershk/UIDAI-Analytical-Dashboard) • [Methodology](METHODOLOGY.md)
 
 </div>
+
