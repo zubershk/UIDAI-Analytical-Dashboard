@@ -11,11 +11,8 @@ A **production-grade**, state-level analytical system to detect **declining Aadh
 ---
 
 
-## 🔗 Live Dashboard
-**[➡️ View Interactive Dashboard](https://uidai-analytical-dash.streamlit.app/)**
-
 ## Live Dashboard
-[UIDAI Dashboard](https://uidai-analytical-dash.streamlit.app/)
+**[View Interactive Dashboard](https://uidai-analytical-dash.streamlit.app/)**
 
 ---
 
