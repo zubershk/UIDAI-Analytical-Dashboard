@@ -10,10 +10,6 @@ A **production-grade**, state-level analytical system to detect **declining Aadh
 
 ---
 
-<<<<<<< HEAD
-## 🔗 Live Dashboard
-**[➡️ View Interactive Dashboard](https://uidai-analytical-dash.streamlit.app/)**
-=======
 ## Live Dashboard
 [UIDAI Dashboard](https://uidai-analytical-dash.streamlit.app/)
 
@@ -32,11 +28,10 @@ Key operational questions faced by administrators include:
 - How can this be detected **early**, using data alone?
 
 This project addresses these questions by building a **reproducible, state-level analytical framework** and deploying it as a **live, interactive dashboard**.
->>>>>>> afe1f7133e6678ccf4d678355e15526142171cd5
 
 ---
 
-## 📊 Key Findings
+## Key Findings
 
 Our statistical analysis of Aadhaar update patterns across India reveals:
 
@@ -47,15 +42,39 @@ Our statistical analysis of Aadhaar update patterns across India reveals:
 - **Early detection** enables **3-6 month advance warning** before critical thresholds
 
 ### Impact Metrics
-- 📌 **36 states/UTs analyzed** with **1.2M+ data points**
-- 🎯 **Priority ranking system** covering **100% of Indian states**
-- ⚡ **Real-time dashboard** with **3-month forecasting** capability
-- 🧪 **Statistical validation** using Mann-Kendall, effect size, and confidence intervals
-- 📈 **Regional patterns** identified across 6 geographical zones
+- **36 states/UTs analyzed** with **1.2M+ data points**
+- **Priority ranking system** covering **100% of Indian states**
+- **Real-time dashboard** with **3-month forecasting** capability
+- **Statistical validation** using Mann-Kendall, effect size, and confidence intervals
+- **Regional patterns** identified across 6 geographical zones
 
 ---
 
-## 🚀 Quick Start
+## Visualizations
+
+### Correlation Analysis
+![Correlation Heatmap](data/correlation_heatmap.png)
+*9×9 correlation matrix showing relationships between all metrics*
+
+### State-wise Analysis
+![India State Visualization](data/india_state_visualization.png)
+*Geographic distribution of update intensity across Indian states*
+
+### Regional Comparison
+![Regional Comparison](data/regional_comparison.png)
+*Performance comparison across 6 geographical regions*
+
+### Forecasting Results
+![Forecasts Visualization](data/forecasts_visualization.png)
+*3-month ARIMA predictions with 95% confidence intervals*
+
+### Statistical Confidence
+![Confidence Intervals](data/confidence_intervals.png)
+*95% confidence intervals for state-level estimates*
+
+---
+
+## Quick Start
 
 ### Run Locally
 
@@ -75,7 +94,7 @@ The dashboard will open at `http://localhost:8501`
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 uidai/
@@ -110,6 +129,8 @@ uidai/
 │   └── 08_forecasting.ipynb                   # ARIMA predictions
 │
 └── src/
+    ├── __init__.py            # Module exports
+    ├── config.py              # Configuration settings
     ├── ingestion.py           # Data loading utilities
     ├── preprocessing.py       # Data transformation
     ├── metrics.py             # Statistical calculations
@@ -118,7 +139,7 @@ uidai/
 
 ---
 
-## 💡 Problem Statement
+## Problem Statement
 
 ### Official UIDAI Hackathon Challenge
 
@@ -147,7 +168,7 @@ This project addresses the challenge by:
 
 ---
 
-## 🧮 Methodology
+## Methodology
 
 ### Datasets Used (Official UIDAI Data)
 
@@ -196,9 +217,9 @@ This project addresses the challenge by:
 
 ---
 
-## 📈 Dashboard Features
+## Dashboard Features
 
-### 🎛️ Five Comprehensive Pages
+### Five Comprehensive Pages
 
 1. **Overview**: KPIs, state insights, priority matrix, trend charts
 2. **Statistical Analysis**: Summary stats, benchmarking, correlation matrix, effect sizes
@@ -206,7 +227,7 @@ This project addresses the challenge by:
 4. **Forecasting**: ARIMA predictions with confidence intervals, scenario analysis
 5. **State Deep Dive**: Detailed time series and metrics for selected state
 
-### 📊 Key Features
+### Key Features
 
 - **Interactive Controls**: State selector, status filter, navigation menu
 - **KPI Cards**: Real-time statistics (Healthy/Decaying/Total states)
@@ -218,7 +239,7 @@ This project addresses the challenge by:
 
 ---
 
-## 🧪 Statistical Rigor
+## Statistical Rigor
 
 ### Tests Conducted
 - **Mann-Kendall Trend Test**: Non-parametric trend detection (p-values reported)
@@ -233,7 +254,7 @@ This project addresses the challenge by:
 
 ---
 
-## 🌍 Geospatial Analysis
+## Geospatial Analysis
 
 States grouped into 6 geographical regions:
 - **North**: 8 states (J&K, Ladakh, HP, Punjab, Haryana, Delhi, Uttarakhand, Chandigarh)
@@ -248,7 +269,7 @@ States grouped into 6 geographical regions:
 
 ---
 
-## 🔮 Forecasting
+## Forecasting
 
 ### ARIMA Models
 - **3-month ahead predictions** for top 10 decaying states
@@ -261,24 +282,23 @@ States grouped into 6 geographical regions:
 
 ---
 
-## 📦 Dependencies
+## Dependencies
 
 ```txt
-streamlit >= 1.28.0
-pandas >= 2.0.0
-plotly >= 5.17.0
-matplotlib >= 3.7.0
-scipy >= 1.10.0
-statsmodels >= 0.14.0
-numpy >= 1.24.0
+streamlit==1.41.0
+pandas==2.2.3
+plotly==5.24.1
+matplotlib==3.9.3
+scipy==1.14.1
+statsmodels==0.14.4
+numpy==2.0.2
 ```
 
-<<<<<<< HEAD
 Install all: `pip install -r requirements.txt`
 
 ---
 
-## 📊 Data Usage
+## Data Usage
 
 ### Source
 All datasets are **official UIDAI data** provided for the Data Hackathon 2026.
@@ -303,7 +323,7 @@ All datasets are **official UIDAI data** provided for the Data Hackathon 2026.
 
 ---
 
-## 📄 Submission Format (UIDAI Hackathon)
+## Submission Format (UIDAI Hackathon)
 
 This project fulfills all UIDAI hackathon submission requirements:
 
@@ -332,7 +352,7 @@ This project fulfills all UIDAI hackathon submission requirements:
 
 ---
 
-## 📄 License
+## License
 
 This project is developed for government/administrative use under the UIDAI Data Hackathon 2026 guidelines.
 
@@ -340,7 +360,7 @@ This project is developed for government/administrative use under the UIDAI Data
 
 ---
 
-## 👨‍💻 Developer
+## Developer
 
 **Zuber Shaikh**  
 - GitHub: [@zubershk](https://github.com/zubershk)
@@ -348,7 +368,7 @@ This project is developed for government/administrative use under the UIDAI Data
 
 ---
 
-## 🏆 Achievements
+## Achievements
 
 ✅ **Live Production Dashboard**: Deployed on Streamlit Cloud  
 ✅ **Statistical Rigor**: Hypothesis testing with p-values  
@@ -359,7 +379,7 @@ This project is developed for government/administrative use under the UIDAI Data
 
 ---
 
-## 📞 Support
+## Support
 
 For questions or issues:
 1. Open an [issue](https://github.com/zubershk/UIDAI-Analytical-Dashboard/issues)
@@ -380,9 +400,3 @@ For questions or issues:
 [Live Dashboard](https://uidai-analytical-dash.streamlit.app/) • [GitHub](https://github.com/zubershk/UIDAI-Analytical-Dashboard) • [Methodology](METHODOLOGY.md)
 
 </div>
-=======
-### Run the Dashboard
-```bash
-streamlit run app.py
-```
->>>>>>> afe1f7133e6678ccf4d678355e15526142171cd5

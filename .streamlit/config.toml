@@ -1,0 +1,16 @@
+# Streamlit configuration for deployment
+[server]
+headless = true
+port = 8501
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#0B3C5D"
+backgroundColor = "#98B5DCFF"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1E293B"

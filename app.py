@@ -1,272 +1,333 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
+from src.ingestion import load_monthly_features, load_priority_table
 import streamlit.components.v1 as components
 import os
 
 # ==============================
-# Page Config
+# Page Configuration
 # ==============================
 st.set_page_config(
-    page_title="UIDAI Analytical Dashboard",
+    page_title="UIDAI Dashboard",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ==============================
-# UIDAI Original Theme
-# ==============================
-UIDAI_THEME = {
-    "bg_app": "#98B5DCFF",       # Original light blue
-    "bg_surface": "#FFFFFF",     # White cards
-    "text_primary": "#1E293B",   # Dark text
-    "text_secondary": "#64748B", # Muted text
-    "brand_blue": "#0B3C5D",     # UIDAI dark blue
-    "brand_orange": "#D97706",   # Orange accent
-    "success": "#15803d",        # Green
-    "danger": "#b91c1c",         # Red
-    "border": "#E2E8F0"          # Light border
-}
-
-# ==============================
-# Data Loading
+# Load Data
 # ==============================
 @st.cache_data
 def load_data():
-    from src.ingestion import load_monthly_features, load_priority_table
     monthly = load_monthly_features("data/feature_engineered_monthly.csv")
     priority = load_priority_table("data/state_priority_classification_final.csv")
-    return monthly, priority
-
-@st.cache_data
-def load_analytics():
-    def safe_load(path):
+    
+    # Load analytical CSVs with proper error handling
+    analytics = {}
+    files_to_load = [
+        ('stat_summary', 'data/statistical_summary.csv'),
+        ('regional', 'data/regional_summary.csv'),
+        ('forecasts', 'data/state_forecasts_3month.csv'),
+        ('benchmarking', 'data/state_benchmarking.csv'),
+        ('effect_size', 'data/effect_size_analysis.csv')
+    ]
+    
+    for name, path in files_to_load:
         try:
-            return pd.read_csv(path)
-        except:
-            return pd.DataFrame()
+            if os.path.exists(path):
+                analytics[name] = pd.read_csv(path)
+            else:
+                analytics[name] = pd.DataFrame()
+        except PermissionError:
+            st.error(f"Error: Permission denied accessing {path}")
+            analytics[name] = pd.DataFrame()
     
-    return {
-        'stat_summary': safe_load("data/statistical_summary.csv"),
-        'regional': safe_load("data/regional_summary.csv"),
-        'forecasts': safe_load("data/state_forecasts_3month.csv"),
-        'benchmarking': safe_load("data/state_benchmarking.csv"),
-        'effect_size': safe_load("data/effect_size_analysis.csv")
-    }
+    return monthly, priority, analytics
 
-df_monthly, df_priority = load_data()
-analytics = load_analytics()
+df_monthly, df_priority, analytics = load_data()
 
 # ==============================
-# CSS Styling - Professional & User-Friendly
+# CSS Styling - Clean & Simple
 # ==============================
-st.markdown(f"""
+st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-    * {{
-        font-family: 'Inter', sans-serif;
-    }}
+    /* Main app background - UIDAI Light Blue */
+    .stApp {
+        background-color: #98B5DCFF;
+    }
     
-    .stApp {{
-        background-color: {UIDAI_THEME['bg_app']};
-    }}
-    
-    /* Sidebar */
-    section[data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, {UIDAI_THEME['brand_blue']} 0%, #0a2f47 100%);
-    }}
-    
-    section[data-testid="stSidebar"] * {{
-        color: white !important;
-    }}
-    
-    section[data-testid="stSidebar"] label {{
-        font-weight: 500 !important;
-    }}
-    
-    /* Main header */
-    .dashboard-header {{
-        background: linear-gradient(135deg, {UIDAI_THEME['brand_blue']} 0%, #1e3a8a 100%);
-        padding: 35px;
-        border-radius: 15px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        margin-bottom: 30px;
-        border-left: 6px solid {UIDAI_THEME['brand_orange']};
-    }}
-    
-    .dashboard-header h1 {{
-        color: white;
-        margin: 0;
-        font-size: 2.2rem;
-        font-weight: 700;
-    }}
-    
-    .dashboard-header p {{
-        color: #E2E8F0;
-        margin: 12px 0 0 0;
-        font-size: 1.1rem;
-    }}
-    
-    /* KPI Cards */
-    .kpi-card {{
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        text-align: center;
-        margin-bottom: 20px;
-        border-left: 5px solid;
-        transition: transform 0.2s;
-    }}
-    
-    .kpi-card:hover {{
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }}
-    
-    .kpi-value {{
-        font-size: 2.8rem;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }}
-    
-    .kpi-label {{
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: 600;
-        color: {UIDAI_THEME['text_secondary']};
-    }}
-    
-    /* Content cards */
-    .content-card {{
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 25px;
-    }}
-    
-    .content-card h3 {{
-        color: {UIDAI_THEME['brand_blue']};
-        margin-top: 0;
-        margin-bottom: 20px;
-        font-size: 1.3rem;
-        font-weight: 600;
-    }}
-    
-    /* Insight box */
-    .insight-box {{
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        border-left: 4px solid {UIDAI_THEME['brand_blue']};
-        margin: 20px 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }}
-    
-    .insight-box p {{
-        margin: 0;
-        color: {UIDAI_THEME['text_primary']};
-        line-height: 1.8;
-        font-size: 1.05rem;
-    }}
-    
-    /* Page title */
-    .page-title {{
-        color: {UIDAI_THEME['brand_blue']};
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 3px solid {UIDAI_THEME['brand_orange']};
-    }}
-    
-    /* Visualization container */
-    .viz-container {{
-        background: white;
+    /* Metric/KPI Cards - Blue gradient with hover */
+    [data-testid="stMetric"] {
+        background: linear-gradient(135deg, #0B3C5D 0%, #1e3a8a 100%);
         padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-left: 5px solid #D97706;
+        transition: all 0.3s ease;
+    }
+    
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    
+    [data-testid="stMetric"] label {
+        color: #E2E8F0 !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+    
+    [data-testid="stMetric"] [data-testid="stMetricValue"] {
+        color: white !important;
+        font-size: 2.5rem !important;
+        font-weight: 700 !important;
+    }
+    
+    [data-testid="stMetric"] [data-testid="stMetricDelta"] {
+        color: #D97706 !important;
+    }
+    
+    /* Tables - FORCE WHITE backgrounds */
+    div[data-testid="stDataFrame"],
+    div[data-testid="stDataFrame"] > div,
+    div[data-testid="stDataFrame"] > div > div {
+        background-color: white !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Table styling for st.table */
+    [data-testid="stTable"] table {
+        width: 100% !important;
+        border-collapse: collapse !important;
         border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-        margin-bottom: 20px;
-    }}
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
     
-    .viz-container img {{
-        border-radius: 8px;
-        width: 100%;
-        height: auto;
-    }}
+    /* Table headers - Light Blue background with Dark text */
+    [data-testid="stTable"] thead th {
+        background-color: #DBEAFE !important;
+        color: #0B3C5D !important;
+        font-weight: 700 !important;
+        padding: 14px 12px !important;
+        text-align: left !important;
+        border-bottom: 2px solid #0B3C5D !important;
+    }
     
-    /* Responsive */
-    @media (max-width: 768px) {{
-        .dashboard-header h1 {{
-            font-size: 1.5rem;
-        }}
-        .kpi-value {{
-            font-size: 2rem;
-        }}
-    }}
+    /* Table body - White with Black text */
+    [data-testid="stTable"] tbody td {
+        background-color: white !important;
+        color: #1E293B !important;
+        padding: 12px !important;
+        border-bottom: 1px solid #E2E8F0 !important;
+    }
+    
+    /* Hover effect on rows */
+    [data-testid="stTable"] tbody tr:hover td {
+        background-color: #F8FAFC !important;
+    }
+    
+    /* Enhanced Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0B3C5D 0%, #072338 100%);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    [data-testid="stSidebar"] * {
+        color: white !important;
+    }
+    
+    /* Sidebar header styling */
+    [data-testid="stSidebar"] h1 {
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        padding: 1rem 0 !important;
+        border-bottom: 2px solid #D97706 !important;
+        margin-bottom: 1.5rem !important;
+    }
+    
+    /* Radio buttons styling */
+    [data-testid="stSidebar"] .stRadio > label {
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    [data-testid="stSidebar"] .stRadio > div {
+        gap: 0.5rem !important;
+    }
+    
+    [data-testid="stSidebar"] .stRadio label {
+        padding: 0.75rem 1rem !important;
+        border-radius: 8px !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+    }
+    
+    [data-testid="stSidebar"] .stRadio label:hover {
+        background-color: rgba(255,255,255,0.1) !important;
+    }
+    
+    /* Selectbox styling */
+    [data-testid="stSidebar"] .stSelectbox > label {
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* RESPONSIVE DESIGN */
+    
+    /* Tablet (portrait) and below */
+    @media (max-width: 768px) {
+        /* Title and headers */
+        h1 {
+            font-size: 1.75rem !important;
+        }
+        
+        h2, h3 {
+            font-size: 1.25rem !important;
+        }
+        
+        /* Metric cards - stack vertically */
+        [data-testid="stMetric"] {
+            padding: 15px !important;
+        }
+        
+        [data-testid="stMetric"] [data-testid="stMetricValue"] {
+            font-size: 2rem !important;
+        }
+        
+        /* Tables - smaller text */
+        [data-testid="stTable"] thead th {
+            padding: 10px 8px !important;
+            font-size: 0.85rem !important;
+        }
+        
+        [data-testid="stTable"] tbody td {
+            padding: 8px !important;
+            font-size: 0.85rem !important;
+        }
+        
+        /* Sidebar - auto-collapse on mobile */
+        [data-testid="stSidebar"] {
+            width: 280px !important;
+        }
+    }
+    
+    /* Mobile (landscape and portrait) */
+    @media (max-width: 640px) {
+        /* Main title */
+        h1 {
+            font-size: 1.5rem !important;
+            padding: 0.5rem 0 !important;
+        }
+        
+        h2 {
+            font-size: 1.1rem !important;
+        }
+        
+        h3 {
+            font-size: 1rem !important;
+        }
+        
+        /* Metrics */
+        [data-testid="stMetric"] {
+            padding: 12px !important;
+            margin-bottom: 10px !important;
+        }
+        
+        [data-testid="stMetric"] label {
+            font-size: 0.75rem !important;
+        }
+        
+        [data-testid="stMetric"] [data-testid="stMetricValue"] {
+            font-size: 1.5rem !important;
+        }
+        
+        /* Tables - much smaller */
+        [data-testid="stTable"] thead th {
+            padding: 8px 6px !important;
+            font-size: 0.75rem !important;
+        }
+        
+        [data-testid="stTable"] tbody td {
+            padding: 6px !important;
+            font-size: 0.75rem !important;
+        }
+        
+        /* Sidebar */
+        [data-testid="stSidebar"] {
+            width: 260px !important;
+        }
+        
+        [data-testid="stSidebar"] h1 {
+            font-size: 1.25rem !important;
+        }
+        
+        /* Plotly charts - ensure they're responsive */
+        .js-plotly-plot {
+            width: 100% !important;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # ==============================
-# Sidebar
+# Enhanced Sidebar
 # ==============================
-st.sidebar.markdown("""
-<div style='padding: 20px 0; text-align: center; border-bottom: 2px solid rgba(255,255,255,0.2);'>
-    <h1 style='margin: 0; font-size: 1.8rem;'>AADHAAR</h1>
-    <p style='margin: 5px 0 0 0; font-size: 0.85rem; opacity: 0.9;'>Analytics Dashboard</p>
-</div>
-""", unsafe_allow_html=True)
+st.sidebar.markdown("# UIDAI Analytics")
+st.sidebar.markdown("*State-level Performance Monitoring*")
+st.sidebar.markdown("---")
 
-st.sidebar.markdown("<br>", unsafe_allow_html=True)
-
+# Navigation
+st.sidebar.markdown("### Navigation")
 page = st.sidebar.radio(
-    "NAVIGATION",
-    ["Overview", "Statistical Analysis", "Geographic Insights", "Forecasting", "State Deep Dive"]
+    "Select Page",
+    ["Overview", "Statistical Analysis", "Geographic Insights", "Forecasting", "State Details"],
+    label_visibility="collapsed"
 )
 
 st.sidebar.markdown("---")
 
+# State Selection
+st.sidebar.markdown("### State Selection")
 selected_state = st.sidebar.selectbox(
-    "Select State",
-    sorted(df_priority["state"].unique())
+    "Choose a state",
+    sorted(df_priority["state"].unique()),
+    label_visibility="collapsed"
 )
-
-status_filter = st.sidebar.radio(
-    "Filter by Status",
-    ["All Categories", "DECAYING", "HEALTHY"]
-)
-
-filtered_priority = df_priority if status_filter == "All Categories" else df_priority[df_priority["state_status"] == status_filter]
 
 st.sidebar.markdown("---")
+
+# Filters
+st.sidebar.markdown("### Filters")
+status_filter = st.sidebar.radio(
+    "Filter by Performance Status",
+    ["All", "DECAYING", "HEALTHY"],
+    label_visibility="collapsed"
+)
+
+filtered_priority = df_priority if status_filter == "All" else df_priority[df_priority["state_status"] == status_filter]
+
+st.sidebar.markdown("---")
+
+# Info Section
 st.sidebar.markdown("### About")
-st.sidebar.markdown("UIDAI Data Hackathon 2026")
-st.sidebar.markdown("[GitHub](https://github.com/zubershk)")
+st.sidebar.markdown("**UIDAI Data Hackathon 2026**")
+st.sidebar.markdown("Developed by Zuber Shaikh")
+st.sidebar.markdown("[GitHub Repository](https://github.com/zubershk/UIDAI-Analytical-Dashboard.git)")
+st.sidebar.markdown("")
 
 # ==============================
 # Header
 # ==============================
-st.markdown("""
-<div class="dashboard-header">
-    <h1>AADHAAR OPERATIONAL ANALYTICS</h1>
-    <p>Strategy & Policy Division | State-Level Update Monitoring System</p>
-</div>
-""", unsafe_allow_html=True)
-
-# ==============================
-# Helper Function for KPI Cards
-# ==============================
-def render_kpi(value, label, color):
-    st.markdown(f"""
-    <div class="kpi-card" style="border-left-color: {color};">
-        <div class="kpi-value" style="color: {color};">{value}</div>
-        <div class="kpi-label">{label}</div>
-    </div>
-    """, unsafe_allow_html=True)
+st.title("AADHAAR OPERATIONAL ANALYTICS")
+st.markdown("### Strategy & Policy Division | State-Level Update Monitoring")
+st.markdown("---")
 
 # ==============================
 # PAGE: OVERVIEW
@@ -280,365 +341,313 @@ if page == "Overview":
     healthy = (df_priority["state_status"] == "HEALTHY").sum()
     
     with col1:
-        render_kpi(healthy, "HEALTHY REGIONS", UIDAI_THEME['success'])
+        st.metric("Healthy States", healthy, delta="Good Performance", delta_color="normal")
     with col2:
-        render_kpi(decaying, "CRITICAL / DECAYING", UIDAI_THEME['danger'])
+        st.metric("Decaying States", decaying, delta="Needs Attention", delta_color="inverse")
     with col3:
-        render_kpi(total, "TOTAL COVERED", UIDAI_THEME['brand_orange'])
+        st.metric("Total States", total, delta="Complete Coverage", delta_color="off")
     
-    # State Insights
-    st.markdown('<div class="content-card">', unsafe_allow_html=True)
-    st.markdown("### State Insights")
+    st.markdown("---")
     
-    state_data = df_priority[df_priority['state'] == selected_state].iloc[0]
+    # State Info
+    st.subheader(f"Selected State: {selected_state}")
+    
+    state_filter = df_priority[df_priority['state'] == selected_state]
+    if state_filter.empty:
+        st.error(f"No data found for {selected_state}")
+        st.stop()
+    state_data = state_filter.iloc[0]
     state_ts = df_monthly[df_monthly['state'] == selected_state].sort_values('year_month')
     
-    if len(state_ts) >= 2:
-        recent = state_ts.tail(1)['update_intensity'].values[0]
-        prev = state_ts.tail(2).head(1)['update_intensity'].values[0]
-        trend_pct = ((recent - prev) / prev * 100) if prev > 0 else 0
-        trend = "Increasing" if trend_pct > 0 else "Declining" if trend_pct < 0 else "Stable"
-    else:
-        trend_pct = 0
-        trend = "Stable"
-    
-    status = state_data['state_status']
-    rank = int(state_data['priority_rank'])
-    color = UIDAI_THEME['danger'] if status == "DECAYING" else UIDAI_THEME['success']
-    
-    st.markdown(f"""
-    <div class="insight-box" style="border-left-color: {color};">
-        <p>
-            <strong style='color: {UIDAI_THEME['brand_blue']}; font-size: 1.3rem;'>{selected_state}</strong><br><br>
-            <strong>Status:</strong> <span style='color: {color}; font-weight: 700;'>{status}</span> | 
-            <strong>Priority Rank:</strong> #{rank} of {total}<br>
-            <strong>Recent Trend:</strong> {trend_pct:+.1f}% ({trend})<br><br>
-            <strong>Recommendation:</strong> {
-                "Immediate intervention required. Deploy targeted engagement campaigns."
-                if status == "DECAYING" else
-                "Performance stable. Continue monitoring."
-            }
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Charts Row
-    col1, col2 = st.columns(2)
-    
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown("### Priority Matrix")
-        display_df = filtered_priority.sort_values("priority_rank").head(15)[
-            ["state", "state_status", "avg_update_intensity", "priority_rank"]
-        ]
-        st.dataframe(display_df, use_container_width=True, height=400, hide_index=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
+        st.metric("Status", state_data['state_status'])
     with col2:
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown("### Low Activity Regions")
-        bottom_10 = df_priority.nsmallest(10, "avg_update_intensity")
-        fig = go.Figure(go.Bar(
-            y=bottom_10["state"],
-            x=bottom_10["avg_update_intensity"],
-            orientation='h',
-            marker_color=UIDAI_THEME['danger'],
-            marker=dict(line=dict(width=0))
-        ))
-        fig.update_layout(
-            yaxis={'categoryorder': 'total ascending'},
-            height=380,
-            margin=dict(l=0, r=0, t=0, b=0),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            showlegend=False
-        )
-        st.plotly_chart(fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.metric("Priority Rank", f"#{int(state_data['priority_rank'])}")
+    with col3:
+        st.metric("Avg Intensity", f"{state_data['avg_update_intensity']:.2f}")
+    with col4:
+        if len(state_ts) >= 2:
+            recent = state_ts.tail(1)['update_intensity'].values[0]
+            prev = state_ts.tail(2).head(1)['update_intensity'].values[0]
+            trend = ((recent - prev) / prev * 100) if prev > 0 else 0
+            st.metric("Monthly Trend", f"{trend:+.1f}%")
+        else:
+            st.metric("Monthly Trend", "N/A")
     
-    # State Trend
-    st.markdown('<div class="content-card">', unsafe_allow_html=True)
-    st.markdown(f"### Update Trend: {selected_state}")
+    st.markdown("---")
     
+    # Low Activity States Chart
+    st.subheader("Low Activity States")
+    bottom_10 = df_priority.nsmallest(10, "avg_update_intensity")
+    fig = go.Figure(go.Bar(
+        y=bottom_10["state"],
+        x=bottom_10["avg_update_intensity"],
+        orientation='h',
+        marker_color='#b91c1c'
+    ))
+    fig.update_layout(
+        height=400,
+        yaxis={'categoryorder': 'total ascending'},
+        showlegend=False,
+        margin=dict(l=0, r=0, t=10, b=0)
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.markdown("---")
+    
+    # Trend Chart
+    st.subheader(f"Update Intensity Trend: {selected_state}")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=state_ts['year_month'], 
+        x=state_ts['year_month'],
         y=state_ts['update_intensity'],
         mode='lines+markers',
-        name='Update Intensity',
-        line=dict(color=UIDAI_THEME['brand_blue'], width=3),
-        marker=dict(size=8, color=UIDAI_THEME['brand_blue'])
+        name='Intensity',
+        line=dict(color='#0B3C5D', width=3),
+        marker=dict(size=8)
     ))
     fig.add_trace(go.Scatter(
         x=state_ts['year_month'],
         y=state_ts['update_intensity_3m_avg'],
         mode='lines',
-        name='3-Month Average',
-        line=dict(color=UIDAI_THEME['brand_orange'], width=2, dash='dash')
+        name='3-Month Avg',
+        line=dict(color='#D97706', width=2, dash='dash')
     ))
     fig.update_layout(
         height=400,
-        hovermode='x unified',
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        showlegend=True,
+        margin=dict(l=0, r=0, t=10, b=0)
     )
     st.plotly_chart(fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Priority Table
+    st.subheader("Priority Matrix")
+    display_df = filtered_priority.sort_values("priority_rank").head(15)[
+        ["state", "state_status", "avg_update_intensity", "priority_rank"]
+    ].copy()
+    display_df.columns = ["State Name", "Status", "Avg Update Intensity", "Priority Rank"]
+    st.table(display_df)
 
 # ==============================
 # PAGE: STATISTICAL ANALYSIS
 # ==============================
 elif page == "Statistical Analysis":
-    st.markdown('<div class="page-title">Statistical Analysis Results</div>', unsafe_allow_html=True)
+    st.subheader("National Statistics")
     
-    # KPIs
     if not analytics['stat_summary'].empty:
-        df_stat = analytics['stat_summary']
+        # Use actual data count instead of incorrect CSV value
+        actual_states = len(df_priority)
         col1, col2, col3, col4 = st.columns(4)
         
-        metrics = [
-            (col1, 'total_states', 'STATES', UIDAI_THEME['brand_blue']),
-            (col2, 'states_with_significant_decline', 'DECLINING', UIDAI_THEME['danger']),
-            (col3, 'states_with_large_effect_decay', 'CRITICAL', UIDAI_THEME['brand_orange']),
-            (col4, 'national_median_intensity', 'MEDIAN', UIDAI_THEME['success'])
-        ]
-        
-        for col, key, label, color in metrics:
-            if key in df_stat.columns:
-                val = df_stat[key].values[0]
-                val_str = str(int(val)) if key != 'national_median_intensity' else f"{val:.2f}"
-                with col:
-                    render_kpi(val_str, label, color)
+        with col1:
+            st.metric("States/UTs Analyzed", actual_states)
+        if 'states_with_significant_decline' in analytics['stat_summary'].columns:
+            with col2:
+                st.metric("Declining States", int(analytics['stat_summary']['states_with_significant_decline'].values[0]))
+        if 'states_with_large_effect_decay' in analytics['stat_summary'].columns:
+            with col3:
+                st.metric("Critical States", int(analytics['stat_summary']['states_with_large_effect_decay'].values[0]))
+        if 'national_median_intensity' in analytics['stat_summary'].columns:
+            with col4:
+                st.metric("Median Intensity", f"{analytics['stat_summary']['national_median_intensity'].values[0]:.2f}")
     
-    # Visualizations - Links only to avoid memory errors
-    col1, col2 = st.columns(2)
+    st.markdown("---")
     
-    with col1:
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown("### Correlation Matrix")
-        if os.path.exists("data/correlation_heatmap.png"):
-            st.markdown("""  
-            Large visualization available for download:  
-            [Open Correlation Heatmap](data/correlation_heatmap.png)
-            """)
-            st.info("View in data folder to avoid memory issues in browser")
-        else:
-            st.info("Visualization will be generated after running notebook 06")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown("### Confidence Intervals")
-        if os.path.exists("data/confidence_intervals.png"):
-            st.markdown("""  
-            Large visualization available for download:  
-            [Open Confidence Intervals](data/confidence_intervals.png)
-            """)
-            st.info("View in data folder to avoid memory issues in browser")
-        else:
-            st.info("Visualization will be generated after running notebook 06")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Data Tables
+    # Benchmarking Table
     if not analytics['benchmarking'].empty:
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown("### State Benchmarking")
-        cols = ['state']
-        for c in ['avg_intensity', 'percentile', 'trend']:
-            if c in analytics['benchmarking'].columns:
-                cols.append(c)
-        display_df = analytics['benchmarking'].nlargest(20, cols[1])[cols] if len(cols) > 1 else analytics['benchmarking']
-        st.dataframe(display_df, use_container_width=True, height=400, hide_index=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.subheader("State Benchmarking")
+        cols = ['state', 'avg_intensity', 'percentile', 'trend']
+        available_cols = [c for c in cols if c in analytics['benchmarking'].columns]
+        display_df = analytics['benchmarking'].nlargest(20, 'avg_intensity')[available_cols].copy()
+        # Rename columns for better readability
+        col_rename = {'state': 'State Name', 'avg_intensity': 'Avg Intensity', 'percentile': 'Percentile', 'trend': 'Trend'}
+        display_df.columns = [col_rename.get(c, c) for c in display_df.columns]
+        st.table(display_df)
     
+    st.markdown("---")
+    
+    # Effect Size
     if not analytics['effect_size'].empty:
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown("### Effect Size Analysis")
+        st.subheader("Effect Size Analysis")
         cols = ['state', 'early_mean', 'recent_mean', 'change', 'cohens_d', 'magnitude']
-        display_df = analytics['effect_size'].nsmallest(10, 'cohens_d')[[c for c in cols if c in analytics['effect_size'].columns]]
-        st.dataframe(display_df, use_container_width=True, height=350, hide_index=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        available_cols = [c for c in cols if c in analytics['effect_size'].columns]
+        display_df = analytics['effect_size'].nsmallest(10, 'cohens_d')[available_cols].copy()
+        # Rename columns for better readability
+        col_rename = {'state': 'State Name', 'early_mean': 'Early Mean', 'recent_mean': 'Recent Mean', 'change': 'Change', 'cohens_d': "Cohen's D", 'magnitude': 'Magnitude'}
+        display_df.columns = [col_rename.get(c, c) for c in display_df.columns]
+        st.table(display_df)
+    
+    st.markdown("---")
+    
+    # Visualization Images
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Correlation Heatmap")
+        if os.path.exists("data/correlation_heatmap.png"):
+            st.image("data/correlation_heatmap.png", caption="9×9 Correlation Matrix", use_container_width=True)
+    with col2:
+        st.subheader("Confidence Intervals")
+        if os.path.exists("data/confidence_intervals.png"):
+            st.image("data/confidence_intervals.png", caption="95% CI for State Estimates", use_container_width=True)
 
 # ==============================
-# PAGE: GEOGRAPHIC INSIGHTS
+# PAGE: GEOGRAPHIC INSIGHTS  
 # ==============================
 elif page == "Geographic Insights":
-    st.markdown('<div class="page-title">Geographic Analysis</div>', unsafe_allow_html=True)
+    st.subheader("Regional Performance")
+    
+    if not analytics['regional'].empty:
+        reg_df = analytics['regional'].sort_values('mean_intensity', ascending=False)
+        
+        # Regional Performance Chart (full width)
+        fig = go.Figure(go.Bar(
+            x=reg_df['region'],
+            y=reg_df['mean_intensity'],
+            marker_color='#0B3C5D',
+            text=reg_df['num_states'].apply(lambda x: f"{int(x)} states"),
+            textposition='outside'
+        ))
+        fig.update_layout(
+            height=400,
+            showlegend=False,
+            margin=dict(l=0, r=0, t=10, b=0)
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # Regional Data Table
+        st.subheader("Regional Summary")
+        reg_display = reg_df[['region', 'mean_intensity', 'num_states']].copy()
+        reg_display.columns = ['Region', 'Mean Intensity', 'States Count']
+        st.table(reg_display)
+    
+    st.markdown("---")
     
     # Interactive Map
-    st.markdown('<div class="viz-container">', unsafe_allow_html=True)
-    st.markdown("### Interactive India Map")
+    st.subheader("Interactive India Map")
     if os.path.exists("data/india_interactive_map.html"):
         with open("data/india_interactive_map.html", 'r', encoding='utf-8') as f:
-            html_content = f.read()
-        components.html(html_content, height=600, scrolling=True)
+            components.html(f.read(), height=600, scrolling=True)
     else:
-        st.info("Interactive map will be available after running notebook 07")
-    st.markdown('</div>', unsafe_allow_html=True)
+        st.info("Interactive map available after running notebook 07")
     
-    # State Visualization - Link only
-    st.markdown('<div class="content-card">', unsafe_allow_html=True)
-    st.markdown("### State-wise Breakdown")
-    if os.path.exists("data/india_state_visualization.png"):
-        st.markdown("""  
-        Large India state visualization (1000+ rows):  
-        [Open India State Visualization](data/india_state_visualization.png)  
-        """)
-        st.info("Large image - view offline to avoid memory issues")
-    else:
-        st.info("State visualization will be available after running notebook 07")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("---")
     
-    # Regional Data
-    if not analytics['regional'].empty:
-        col1, col2 = st.columns([2, 1])
-        
-        with col1:
-            st.markdown('<div class="content-card">', unsafe_allow_html=True)
-            st.markdown("### Regional Performance")
-            reg_df = analytics['regional'].sort_values('mean_intensity', ascending=False)
-            fig = go.Figure(go.Bar(
-                x=reg_df['region'],
-                y=reg_df['mean_intensity'],
-                marker_color=UIDAI_THEME['brand_blue'],
-                text=reg_df['num_states'].apply(lambda x: f"{int(x)} states"),
-                textposition='outside',
-                marker=dict(line=dict(width=0))
-            ))
-            fig.update_layout(
-                height=350,
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                showlegend=False
-            )
-            st.plotly_chart(fig, use_container_width=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        with col2:
-            st.markdown('<div class="content-card">', unsafe_allow_html=True)
-            st.markdown("### Regional Data")
-            st.dataframe(reg_df[['region', 'mean_intensity', 'num_states']], 
-                        use_container_width=True, height=350, hide_index=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+    # Static Visualization Images
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Regional Comparison")
+        if os.path.exists("data/regional_comparison.png"):
+            st.image("data/regional_comparison.png", caption="Regional Performance Comparison", use_container_width=True)
+    with col2:
+        st.subheader("State Distribution")
+        if os.path.exists("data/india_state_visualization.png"):
+            st.image("data/india_state_visualization.png", caption="State-wise Update Intensity", use_container_width=True)
 
 # ==============================
 # PAGE: FORECASTING
 # ==============================
 elif page == "Forecasting":
-    st.markdown('<div class="page-title">Predictive Analytics</div>', unsafe_allow_html=True)
+    st.subheader("ARIMA Forecasting Results")
     
-    # Forecast visualization - Link only
-    st.markdown('<div class="content-card">', unsafe_allow_html=True)
-    st.markdown("### ARIMA Forecasts (Top 10 Decaying States)")
-    if os.path.exists("data/forecasts_visualization.png"):
-        st.markdown("""  
-        Large forecast visualization with multiple subplots:  
-        [Open Forecast Visualization](data/forecasts_visualization.png)  
-        """)
-        st.info("Large composite image - view offline to avoid memory issues")
-    else:
-        st.info("Forecast visualization will be available after running notebook 08")
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # State-specific forecast
     if not analytics['forecasts'].empty and selected_state in analytics['forecasts']['state'].values:
         st_forecast = analytics['forecasts'][analytics['forecasts']['state'] == selected_state]
         
-        st.markdown('<div class="content-card">', unsafe_allow_html=True)
-        st.markdown(f"### 3-Month Forecast: {selected_state}")
+        st.markdown(f"**3-Month Forecast: {selected_state}**")
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
-            x=st_forecast['forecast_month'], 
+            x=st_forecast['forecast_month'],
             y=st_forecast['forecast_value'],
             mode='lines+markers',
             name='Forecast',
-            line=dict(color=UIDAI_THEME['brand_orange'], width=3),
+            line=dict(color='#D97706', width=3),
             marker=dict(size=10)
         ))
-        
         fig.add_trace(go.Scatter(
             x=list(st_forecast['forecast_month']) + list(st_forecast['forecast_month'])[::-1],
             y=list(st_forecast['upper_bound']) + list(st_forecast['lower_bound'])[::-1],
             fill='toself',
-            fillcolor='rgba(217,119,6,0.15)',
+            fillcolor='rgba(217,119,6,0.2)',
             line=dict(color='rgba(255,255,255,0)'),
-            name='95% Confidence Interval'
+            name='95% CI'
         ))
-        
-        fig.update_layout(
-            height=400,
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-        )
+        fig.update_layout(height=400, showlegend=True)
         st.plotly_chart(fig, use_container_width=True)
         
-        st.dataframe(st_forecast[['forecast_month', 'forecast_value', 'lower_bound', 'upper_bound']], 
-                    use_container_width=True, hide_index=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        forecast_display = st_forecast[['forecast_month', 'forecast_value', 'lower_bound', 'upper_bound']].copy()
+        forecast_display.columns = ['Month', 'Forecast Value', 'Lower CI', 'Upper CI']
+        st.table(forecast_display)
+    
+    st.markdown("---")
+    
+    # Forecasts Visualization Image
+    st.subheader("All State Forecasts Overview")
+    if os.path.exists("data/forecasts_visualization.png"):
+        st.image("data/forecasts_visualization.png", caption="3-Month ARIMA Forecasts for All States", use_container_width=True)
 
 # ==============================
-# PAGE: STATE DEEP DIVE
+# PAGE: STATE DETAILS
 # ==============================
-elif page == "State Deep Dive":
-    state_data = df_priority[df_priority['state'] == selected_state].iloc[0]
+elif page == "State Details":
+    st.subheader(f"Detailed Analysis: {selected_state}")
     
-    col1, col2, col3 = st.columns(3)
-    
-    status = state_data['state_status']
-    color = UIDAI_THEME['danger'] if status == "DECAYING" else UIDAI_THEME['success']
-    
-    with col1:
-        render_kpi(status, "STATUS", color)
-    with col2:
-        render_kpi(f"#{int(state_data['priority_rank'])}", "PRIORITY", UIDAI_THEME['brand_blue'])
-    with col3:
-        render_kpi(f"{state_data['avg_update_intensity']:.2f}", "AVG INTENSITY", UIDAI_THEME['brand_orange'])
-    
-    # Time series
-    st.markdown('<div class="content-card">', unsafe_allow_html=True)
-    st.markdown("### Complete Time Series Analysis")
-    
+    state_filter = df_priority[df_priority['state'] == selected_state]
+    if state_filter.empty:
+        st.error(f"No data found for {selected_state}")
+        st.stop()
+    state_data = state_filter.iloc[0]
     state_ts = df_monthly[df_monthly['state'] == selected_state].sort_values('year_month')
+    
+    # Metrics
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Status", state_data['state_status'])
+    with col2:
+        st.metric("Priority Rank", f"#{int(state_data['priority_rank'])}")
+    with col3:
+        st.metric("Avg Intensity", f"{state_data['avg_update_intensity']:.2f}")
+    
+    st.markdown("---")
+    
+    # Time Series
+    st.subheader("Complete Time Series")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=state_ts['year_month'], 
+        x=state_ts['year_month'],
         y=state_ts['update_intensity'],
         mode='lines+markers',
         name='Update Intensity',
-        line=dict(color=UIDAI_THEME['brand_blue'], width=3),
-        marker=dict(size=7)
+        line=dict(color='#0B3C5D', width=3)
     ))
     fig.add_trace(go.Scatter(
         x=state_ts['year_month'],
         y=state_ts['update_intensity_3m_avg'],
         mode='lines',
         name='3-Month Moving Average',
-        line=dict(color=UIDAI_THEME['brand_orange'], width=2, dash='dash')
+        line=dict(color='#D97706', width=2, dash='dash')
     ))
-    fig.update_layout(
-        height=450,
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
+    fig.update_layout(height=450, showlegend=True)
     st.plotly_chart(fig, use_container_width=True)
     
-    st.markdown("### Historical Data")
-    st.dataframe(state_ts[['year_month', 'update_intensity', 'update_intensity_3m_avg']], 
-                use_container_width=True, height=400, hide_index=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("---")
+    
+    # Historical Data
+    st.subheader("Historical Data")
+    hist_display = state_ts[['year_month', 'update_intensity', 'update_intensity_3m_avg']].sort_values('year_month', ascending=False).copy()
+    hist_display.columns = ['Year-Month', 'Update Intensity', '3-Month Average']
+    st.table(hist_display)
 
 # ==============================
 # Footer
 # ==============================
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; padding: 25px; color: #64748B;'>
-    <p style='margin: 5px; font-size: 0.95rem;'><strong>UIDAI Data Hackathon 2026</strong></p>
-    <p style='margin: 5px; font-size: 0.85rem;'>Developed by Zuber Shaikh | Built with Streamlit & Python</p>
+<div style='text-align: center; padding: 20px; color: #1E293B;'>
+    <p><strong>UIDAI Data Hackathon 2026</strong> | Developed by Zuber Shaikh</p>
 </div>
 """, unsafe_allow_html=True)

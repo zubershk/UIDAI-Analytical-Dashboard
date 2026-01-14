@@ -299,12 +299,12 @@ States classified into 6 regions:
 ### 11.1 Environment Requirements
 ```bash
 Python 3.9+
-pandas 2.0+
-numpy 1.24+
-scipy 1.10+
-statsmodels 0.14+
-streamlit 1.28+
-plotly 5.17+
+pandas==2.2.3
+numpy==2.0.2
+scipy==1.14.1
+statsmodels==0.14.4
+streamlit==1.41.0
+plotly==5.24.1
 ```
 
 ### 11.2 Execution Steps
