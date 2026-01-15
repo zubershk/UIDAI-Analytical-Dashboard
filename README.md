@@ -316,6 +316,11 @@ matplotlib==3.9.3
 scipy==1.14.1
 statsmodels==0.14.4
 numpy==2.0.2
+Pillow==11.0.0
+folium==0.18.0
+jupyter==1.1.1
+notebook==7.3.2
+pytest==8.3.4
 ```
 
 Install all: `pip install -r requirements.txt`
