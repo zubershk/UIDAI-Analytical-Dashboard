@@ -309,18 +309,14 @@ States grouped into 6 geographical regions:
 ## Dependencies
 
 ```txt
-streamlit==1.41.0
-pandas==2.2.3
-plotly==5.24.1
-matplotlib==3.9.3
-scipy==1.14.1
-statsmodels==0.14.4
-numpy==2.0.2
-Pillow==11.0.0
-folium==0.18.0
-jupyter==1.1.1
-notebook==7.3.2
-pytest==8.3.4
+streamlit>=1.28.0
+pandas>=2.0.0
+plotly>=5.17.0
+matplotlib>=3.7.0
+scipy>=1.10.0
+statsmodels>=0.14.0
+numpy>=1.24.0
+Pillow>=10.0.0
 ```
 
 Install all: `pip install -r requirements.txt`
