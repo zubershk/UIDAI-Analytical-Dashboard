@@ -355,37 +355,16 @@ All datasets are **official UIDAI data** provided for the Data Hackathon 2026.
 
 ---
 
-## License & Data Usage
+## License
 
-### License
-This project is licensed under the **MIT License** - see below for details.
-
-```
-MIT License
-
-Copyright (c) 2026 Zuber Shaikh
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
-### Data Usage Terms
-- **Source**: Official UIDAI anonymized datasets provided for Data Hackathon 2026
-- **Privacy**: All data is aggregated at state/district level - no individual PII
-- **Purpose**: Research, analysis, and administrative decision support only
-- **Restrictions**: Not for commercial redistribution without UIDAI authorization
-- **Compliance**: Adheres to Government of India data handling guidelines
+> ⚠️ **RESTRICTED LICENSE - COMPETITION SUBMISSION**
+>
+> This project is protected intellectual property submitted for UIDAI Data Hackathon 2026.
+> See [LICENSE](LICENSE) file for full terms.
+>
+> **Until January 20, 2026**: All rights reserved. No copying, forking, or redistribution permitted.
+>
+> **After January 20, 2026**: Will be released under MIT License.
 
 ---
 
