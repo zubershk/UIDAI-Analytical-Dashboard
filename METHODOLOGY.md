@@ -323,8 +323,8 @@ streamlit run app.py
 ```
 
 ### 11.3 Expected Outputs
-- 8 CSV files in `data/` directory
-- 6 PNG visualizations
+- 10 CSV files in `data/` directory
+- 5 PNG visualizations
 - 1 HTML interactive map
 - 1 deployed Streamlit application
 
@@ -339,7 +339,7 @@ streamlit run app.py
 
 ---
 
-**Document Version**: 1.0  
+**Document Version**: 2.0  
 **Last Updated**: January 2026  
-**Authors**: UIDAI Hackathon Team  
+**Author**: Zuber Shaikh  
 **Contact**: [GitHub Repository](https://github.com/zubershk/UIDAI-Analytical-Dashboard)

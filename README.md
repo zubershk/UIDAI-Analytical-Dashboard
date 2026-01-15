@@ -82,7 +82,7 @@ Our statistical analysis of Aadhaar update patterns across India reveals:
 ```bash
 # 1. Clone the repository
 git clone https://github.com/zubershk/UIDAI-Analytical-Dashboard.git
-cd UIDAI-Analytical-Dashboard/uidai
+cd UIDAI-Analytical-Dashboard
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -98,26 +98,27 @@ The dashboard will open at `http://localhost:8501`
 ## Project Structure
 
 ```
-uidai/
-├── app.py                    # Streamlit dashboard (deployment-ready)
-├── requirements.txt          # Python dependencies
+UIDAI-Analytical-Dashboard/
+├── app.py                    # Streamlit dashboard (main entry)
+├── requirements.txt          # Python dependencies (pinned versions)
 ├── README.md                 # This file
 ├── METHODOLOGY.md            # Technical documentation
+├── .gitignore                # Git exclusions
 │
 ├── data/
-│   ├── feature_engineered_monthly.csv         # Main dataset (105 KB)
-│   ├── state_priority_classification_final.csv  # State rankings (2 KB)
-│   ├── statistical_summary.csv                # Summary statistics
-│   ├── regional_summary.csv                   # Regional analysis
-│   ├── state_forecasts_3month.csv             # ARIMA predictions
-│   ├── state_benchmarking.csv                 # Benchmarking data
-│   ├── effect_size_analysis.csv               # Effect size analysis
-│   │
-│   ├── correlation_heatmap.png                # Correlation matrix
-│   ├── confidence_intervals.png               # 95% CI visualization
-│   ├── forecasts_visualization.png            # Forecast plots
-│   ├── india_state_visualization.png          # State breakdown
-│   └── india_interactive_map.html             # Interactive choropleth
+│   ├── feature_engineered_monthly.csv    # Main dataset
+│   ├── state_priority_classification_final.csv
+│   ├── statistical_summary.csv
+│   ├── regional_summary.csv
+│   ├── state_forecasts_3month.csv
+│   ├── state_benchmarking.csv
+│   ├── effect_size_analysis.csv
+│   ├── correlation_heatmap.png
+│   ├── confidence_intervals.png
+│   ├── forecasts_visualization.png
+│   ├── india_state_visualization.png
+│   ├── regional_comparison.png
+│   └── india_interactive_map.html
 │
 ├── notebooks/
 │   ├── 01_data_ingestion_and_schema_check.ipynb
@@ -125,17 +126,17 @@ uidai/
 │   ├── 03_feature_engineering.ipynb
 │   ├── 04_analysis_and_visuals.ipynb
 │   ├── 05_anomaly_detection_optional.ipynb
-│   ├── 06_statistical_analysis.ipynb          # Statistical tests
-│   ├── 07_geospatial_viz.ipynb                # Regional analysis
-│   └── 08_forecasting.ipynb                   # ARIMA predictions
+│   ├── 06_statistical_analysis.ipynb
+│   ├── 07_geospatial_viz.ipynb
+│   └── 08_forecasting.ipynb
 │
 └── src/
-    ├── __init__.py            # Module exports
-    ├── config.py              # Configuration settings
-    ├── ingestion.py           # Data loading utilities
-    ├── preprocessing.py       # Data transformation
-    ├── metrics.py             # Statistical calculations
-    └── visualization.py       # Chart generation
+    ├── __init__.py           # Module exports
+    ├── config.py             # Configuration settings
+    ├── ingestion.py          # Data loading
+    ├── preprocessing.py      # Data transformation
+    ├── metrics.py            # Statistical calculations
+    └── visualization.py      # Chart generation
 ```
 
 ---
@@ -398,7 +399,7 @@ For questions or issues:
 ---
 
 **Last Updated**: January 2026  
-**Version**: 2.0 (Final Deployment Edition)
+**Version**: 3.0 (Flattened Structure Edition)
 
 ---
 
