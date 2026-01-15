@@ -365,7 +365,7 @@ All datasets are **official UIDAI data** provided for the Data Hackathon 2026.
 > ⚠️ **RESTRICTED LICENSE - COMPETITION SUBMISSION**
 >
 > This project is protected intellectual property submitted for UIDAI Data Hackathon 2026.
-> See [LICENSE](LICENSE) file for full terms.
+> See [LICENSE](LICENSE.md) file for full terms.
 >
 > **Until January 20, 2026**: All rights reserved. No copying, forking, or redistribution permitted.
 >
