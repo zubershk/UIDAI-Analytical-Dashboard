@@ -4,9 +4,31 @@
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-green?logo=streamlit&logoColor=white)
 ![Analysis](https://img.shields.io/badge/Analysis-Statistical-orange)
-![License](https://img.shields.io/badge/License-Government%20Use-red)
+![License](https://img.shields.io/badge/License-Restricted-red)
 
 A **production-grade**, state-level analytical system to detect **declining Aadhaar update activity**, identify **priority regions**, and support **evidence-based administrative decision-making.**
+
+---
+
+> **⚠️ INTELLECTUAL PROPERTY NOTICE**
+> 
+> This repository contains original work submitted for the **UIDAI Data Hackathon 2026**.
+> 
+> **Effective until:** January 20, 2026 (Competition Deadline)
+> 
+> **Restrictions:**
+> - Copying, forking, reproducing, or redistributing this code is **strictly prohibited**
+> - Derivative works based on this project are **not permitted**
+> - Viewing for reference purposes only
+> 
+> **Legal Framework:**
+> - Protected under the **Indian Copyright Act, 1957** (Section 14, 51)
+> - Protected under the **Information Technology Act, 2000** (Section 43, 66)
+> - Subject to **UIDAI Data Hackathon 2026 Terms & Conditions**
+> 
+> Unauthorized use may result in disqualification and legal action.
+> 
+> *This notice will be replaced with MIT License after the competition deadline.*
 
 ---
 
@@ -333,40 +355,37 @@ All datasets are **official UIDAI data** provided for the Data Hackathon 2026.
 
 ---
 
-## Submission Format (UIDAI Hackathon)
+## License & Data Usage
 
-This project fulfills all UIDAI hackathon submission requirements:
+### License
+This project is licensed under the **MIT License** - see below for details.
 
-### 1. Problem Statement and Approach ✅
-- **Problem**: Identifying declining Aadhaar update trends for administrative intervention
-- **Approach**: Statistical analysis + machine learning + interactive dashboard
-- See sections above for detailed explanation
+```
+MIT License
 
-### 2. Datasets Used ✅
-- **Enrolment Data**: 1,006,029 records
-- **Demographic Update Data**: 2,071,700 records
-- **Biometric Update Data**: 1,861,108 records
-- All columns documented in "Datasets Used" section
+Copyright (c) 2026 Zuber Shaikh
 
-### 3. Methodology ✅
-- **Data Cleaning**: State name normalization, temporal alignment, missing value handling
-- **Preprocessing**: Monthly aggregation, rolling averages, decay signal calculation
-- **Transformations**: Update intensity metric, percentile rankings, risk scores
-- Full details in [METHODOLOGY.md](METHODOLOGY.md)
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-### 4. Data Analysis and Visualisation ✅
-- **Key Findings**: 26 states declining, 7 critical, Northeast most stable
-- **Visualisations**: 8 PNG charts, 2 interactive HTML maps, live dashboard
-- **Code**: 8 Jupyter notebooks included in `/notebooks` directory
-- **GitHub**: Code available at [zubershk/UIDAI-Analytical-Dashboard](https://github.com/zubershk/UIDAI-Analytical-Dashboard)
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
----
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+```
 
-## License
-
-This project is developed for government/administrative use under the UIDAI Data Hackathon 2026 guidelines.
-
-**Data Usage**: All datasets are anonymized and used strictly for analytical purposes.
+### Data Usage Terms
+- **Source**: Official UIDAI anonymized datasets provided for Data Hackathon 2026
+- **Privacy**: All data is aggregated at state/district level - no individual PII
+- **Purpose**: Research, analysis, and administrative decision support only
+- **Restrictions**: Not for commercial redistribution without UIDAI authorization
+- **Compliance**: Adheres to Government of India data handling guidelines
 
 ---
 
