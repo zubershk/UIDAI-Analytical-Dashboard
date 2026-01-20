@@ -238,7 +238,6 @@ States classified into 6 regions:
 2. **Priority Matrix**: Sortable, filterable table
 3. **Regional Chart**: Bar chart of low-activity zones
 4. **Trend Visualization**: Time series with rolling average
-5. **Download Options**: CSV/PDF export functionality
 
 ---
 
@@ -278,7 +277,6 @@ States classified into 6 regions:
 - ✅ Responsive on desktop/tablet/mobile
 - ✅ Load time < 3 seconds (cached data)
 - ✅ Interactive filters functional
-- ✅ CSV downloads validated
 
 ---
 
