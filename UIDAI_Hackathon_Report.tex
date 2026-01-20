@@ -1,0 +1,955 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UIDAI DATA HACKATHON 2026 - FINAL SUBMISSION
+% Strategic Analytical Dashboard for Enrolment Saturation & Update Optimization
+% Author: Zuber Shaikh
+% Date: January 2026
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================================
+% PACKAGES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{tocloft}
+\usepackage{parskip}
+
+% ============================================================================
+% COLOR DEFINITIONS - UIDAI BRANDING
+% ============================================================================
+\definecolor{uidaiblue}{RGB}{11,60,93}
+\definecolor{uidaiorange}{RGB}{217,119,6}
+\definecolor{uidailightblue}{RGB}{152,181,220}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codegray}{RGB}{128,128,128}
+
+% ============================================================================
+% HYPERREF SETUP
+% ============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=uidaiblue,
+    urlcolor=uidaiblue,
+    citecolor=uidaiblue,
+    pdftitle={Strategic Analytical Dashboard for Enrolment Saturation \& Update Optimization},
+    pdfauthor={Zuber Shaikh},
+    pdfsubject={UIDAI Data Hackathon 2026}
+}
+
+% ============================================================================
+% CODE LISTING STYLE
+% ============================================================================
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{uidailightblue},
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    numbersep=8pt,
+    tabsize=4,
+    keywordstyle=\color{uidaiblue}\bfseries,
+    stringstyle=\color{uidaiorange},
+    commentstyle=\color{codegreen}\itshape,
+    captionpos=b,
+    xleftmargin=15pt,
+    xrightmargin=5pt,
+    aboveskip=10pt,
+    belowskip=10pt
+}
+
+% ============================================================================
+% HEADER/FOOTER STYLE
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{uidaiblue}{UIDAI Data Hackathon 2026}}
+\fancyhead[R]{\small\textcolor{uidaiblue}{Zuber Shaikh}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ============================================================================
+% SECTION FORMATTING
+% ============================================================================
+\titleformat{\section}
+    {\Large\bfseries\color{uidaiblue}}
+    {\thesection.}{0.5em}{}
+\titleformat{\subsection}
+    {\large\bfseries\color{uidaiblue}}
+    {\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{uidaiblue}}
+    {\thesubsubsection}{0.5em}{}
+
+% ============================================================================
+% DOCUMENT START
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% TITLE PAGE
+% ============================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\Huge\bfseries\color{uidaiblue} Strategic Analytical Dashboard for\\[0.3cm] Enrolment Saturation \& Update Optimization}
+    
+    \vspace{1cm}
+    
+    {\Large\color{uidaiorange} UIDAI Data Hackathon 2026}
+    
+    \vspace{0.5cm}
+    
+    {\large Final Submission Report}
+    
+    \vspace{2cm}
+    
+    \rule{\textwidth}{1pt}
+    
+    \vspace{1cm}
+    
+    {\Large\bfseries Author}\\[0.3cm]
+    {\large Zuber Shaikh}\\[0.2cm]
+    {\normalsize GitHub: \href{https://github.com/zubershk}{@zubershk}}
+    
+    \vspace{1cm}
+    
+    {\Large\bfseries Project Repository}\\[0.3cm]
+    {\normalsize \href{https://github.com/zubershk/UIDAI-Analytical-Dashboard}{github.com/zubershk/UIDAI-Analytical-Dashboard}}
+    
+    \vspace{1cm}
+    
+    {\Large\bfseries Live Dashboard}\\[0.3cm]
+    {\normalsize \href{https://uidai-analytical-dash.streamlit.app}{uidai-analytical-dash.streamlit.app}}
+    
+    \vspace{1cm}
+    
+    \rule{\textwidth}{1pt}
+    
+    \vfill
+    
+    {\large January 2026}
+    
+\end{titlepage}
+
+% ============================================================================
+% ABSTRACT
+% ============================================================================
+\newpage
+\section*{Executive Summary}
+\addcontentsline{toc}{section}{Executive Summary}
+
+This report presents a \textbf{production-grade analytical system} designed to detect declining Aadhaar update activity, identify priority regions for intervention, and support evidence-based administrative decision-making. Built for the UIDAI Data Hackathon 2026, the solution addresses the challenge of ``Unlocking Societal Trends in Aadhaar Enrolment and Updates.''
+
+\vspace{0.5cm}
+
+\noindent\textbf{Key Findings:}
+\begin{itemize}[nosep]
+    \item \textbf{26 states} exhibit statistically significant declining update trends (Mann-Kendall test, \texorpdfstring{$p<0.05$}{p<0.05})
+    \item \textbf{7 states} show large effect size decay (Cohen's \texorpdfstring{$d > 0.8$}{d > 0.8}), requiring immediate intervention
+    \item \textbf{Puducherry} shows the strongest decay signal (average intensity: 2168 \texorpdfstring{$\rightarrow$}{->} 486, \texorpdfstring{$-77.6\%$}{-77.6\%} decline)
+    \item \textbf{Northeast region} demonstrates most consistent update engagement (lowest volatility)
+    \item \textbf{Early detection} enables \textbf{3--6 month advance warning} before critical thresholds
+\end{itemize}
+
+\vspace{0.5cm}
+
+\noindent\textbf{Deliverables:}
+\begin{itemize}[nosep]
+    \item Interactive Streamlit dashboard with 5 comprehensive pages
+    \item 8 reproducible Jupyter notebooks documenting the complete analytical pipeline
+    \item Priority ranking system covering 100\% of Indian states/UTs
+    \item ARIMA-based 3-month forecasting with 95\% confidence intervals
+\end{itemize}
+
+% ============================================================================
+% TABLE OF CONTENTS
+% ============================================================================
+\newpage
+\tableofcontents
+
+% ============================================================================
+% SECTION 1: PROBLEM STATEMENT AND APPROACH
+% ============================================================================
+\newpage
+\section{Problem Statement and Approach}
+
+\subsection{Official Challenge}
+
+The UIDAI Data Hackathon 2026 poses the challenge:
+
+\begin{quote}
+\textit{``Identify meaningful patterns, trends, anomalies, or predictive indicators and translate them into clear insights or solution frameworks that can support informed decision-making and system improvements.''}
+\end{quote}
+
+\subsection{Problem Context}
+
+Aadhaar enrolment and update services constitute critical national infrastructure serving over 1.4 billion residents. However, \textbf{update activity does not remain uniform over time or geography}. Administrators face several key operational challenges:
+
+\begin{enumerate}[nosep]
+    \item Which states show \textbf{persistent low update activity}?
+    \item Where is update engagement \textbf{declining over time}?
+    \item Which regions should be \textbf{prioritized for intervention}?
+    \item How can declining trends be detected \textbf{early}, using data alone?
+\end{enumerate}
+
+\subsection{Proposed Solution: Update Decay Detection Framework}
+
+We introduce the concept of \textbf{``Update Decay''} --- a measurable decline in the ratio of Aadhaar updates to enrolments over time. Our framework provides:
+
+\begin{itemize}[nosep]
+    \item \textbf{Pattern Identification}: Detected declining update trends across 26 states using non-parametric Mann-Kendall statistical tests
+    \item \textbf{Anomaly Detection}: Identified 7 states with large effect size decay requiring immediate intervention
+    \item \textbf{Predictive Analytics}: Built ARIMA forecasting models providing 3-month advance warnings
+    \item \textbf{Decision Support}: Created priority ranking system and interactive dashboard for administrators
+    \item \textbf{System Improvements}: Proposed regional intervention strategies based on geographic clustering
+\end{itemize}
+
+\subsection{Technical Approach Overview}
+
+Our solution follows a rigorous 7-step analytical pipeline:
+
+\begin{enumerate}[nosep]
+    \item \textbf{Data Ingestion}: Load and validate official UIDAI datasets
+    \item \textbf{Data Cleaning}: Standardize state names, handle missing values, temporal alignment
+    \item \textbf{Feature Engineering}: Compute update intensity, rolling averages, decay signals
+    \item \textbf{Statistical Analysis}: Mann-Kendall tests, effect sizes, confidence intervals
+    \item \textbf{Classification}: HEALTHY/DECAYING state categorization with priority ranking
+    \item \textbf{Geospatial Analysis}: Regional clustering and pattern identification
+    \item \textbf{Forecasting \& Deployment}: ARIMA predictions and Streamlit dashboard
+\end{enumerate}
+
+% ============================================================================
+% SECTION 2: DATASETS USED
+% ============================================================================
+\newpage
+\section{Datasets Used}
+
+\subsection{Data Sources}
+
+All datasets are \textbf{official UIDAI data} provided for the Data Hackathon 2026. The data is fully anonymized and aggregated at state/district level, containing no personally identifiable information (PII).
+
+\subsection{Dataset Descriptions}
+
+\subsubsection{Enrolment Dataset}
+\begin{itemize}[nosep]
+    \item \textbf{Records}: 1,006,029
+    \item \textbf{Granularity}: State-wise, monthly
+    \item \textbf{Coverage}: 12 months temporal span
+    \item \textbf{Age Groups}: 5--17 years, 18+ years
+\end{itemize}
+
+\subsubsection{Demographic Update Dataset}
+\begin{itemize}[nosep]
+    \item \textbf{Records}: 2,071,700
+    \item \textbf{Update Types}: Name, address, photo updates
+    \item \textbf{Granularity}: State and district level
+    \item \textbf{Age Groups}: 5--17 years, 18+ years
+\end{itemize}
+
+\subsubsection{Biometric Update Dataset}
+\begin{itemize}[nosep]
+    \item \textbf{Records}: 1,861,108
+    \item \textbf{Update Types}: Fingerprint and iris updates
+    \item \textbf{Granularity}: Geographic distribution by state
+    \item \textbf{Age Groups}: 5--17 years, 18+ years
+\end{itemize}
+
+\subsection{Column Descriptions}
+
+\begin{table}[H]
+\centering
+\caption{Primary Columns Used in Analysis}
+\begin{tabular}{@{}llp{7cm}@{}}
+\toprule
+\textbf{Column Name} & \textbf{Data Type} & \textbf{Description} \\
+\midrule
+\texttt{state} & String & State or Union Territory name (standardized) \\
+\texttt{year\_month} & Date & Temporal identifier (YYYY-MM format) \\
+\texttt{enrol\_age\_5\_17} & Integer & Enrolments for age group 5--17 years \\
+\texttt{enrol\_age\_18\_plus} & Integer & Enrolments for age group 18+ years \\
+\texttt{demo\_age\_5\_17} & Integer & Demographic updates for age group 5--17 \\
+\texttt{demo\_age\_18\_plus} & Integer & Demographic updates for age group 18+ \\
+\texttt{bio\_age\_5\_17} & Integer & Biometric updates for age group 5--17 \\
+\texttt{bio\_age\_18\_plus} & Integer & Biometric updates for age group 18+ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Derived Metrics}
+
+\begin{table}[H]
+\centering
+\caption{Engineered Features for Analysis}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Metric} & \textbf{Formula} & \textbf{Purpose} \\
+\midrule
+\texttt{update\_intensity} & $(demo + bio) / enrol$ & Ratio of updates to enrolments \\
+\texttt{update\_intensity\_3m\_avg} & Rolling mean (window=3) & Smoothed trend indicator \\
+\texttt{update\_decay\_signal} & Mean of month-to-month diff & Trend direction indicator \\
+\texttt{state\_status} & Rule-based classification & HEALTHY or DECAYING label \\
+\texttt{priority\_rank} & Risk score ranking & Intervention priority order \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Data Characteristics}
+
+\begin{itemize}[nosep]
+    \item \checkmark\ Fully anonymized and aggregated at state/district level
+    \item \checkmark\ Non-identifiable (no PII)
+    \item \checkmark\ Monthly time series (12 months coverage)
+    \item \checkmark\ Supports univariate, bivariate, and trivariate analyses
+    \item \checkmark\ Multi-dimensional (age groups, update types, geography)
+\end{itemize}
+
+% ============================================================================
+% SECTION 3: METHODOLOGY
+% ============================================================================
+\newpage
+\section{Methodology}
+
+\subsection{Mathematical Framework}
+
+\subsubsection{Definitions}
+Let:
+\begin{itemize}[nosep]
+    \item $S$ = Set of all states/UTs in India
+    \item $T = \{t_1, t_2, \ldots, t_n\}$ = Time series of months
+    \item $E(s,t)$ = Total enrolments in state $s$ at time $t$
+    \item $U(s,t)$ = Total updates (demographic + biometric) in state $s$ at time $t$
+\end{itemize}
+
+\subsubsection{Update Intensity}
+\begin{equation}
+I(s,t) = \frac{U(s,t)}{E(s,t)}
+\end{equation}
+
+\subsubsection{Decay Signal}
+\begin{equation}
+D(s) = \frac{\sum_{i=1}^{n-1} \left( I(s,t_{i+1}) - I(s,t_i) \right)}{n-1}
+\end{equation}
+
+\subsubsection{State Classification}
+\begin{equation}
+C(s) = 
+\begin{cases}
+\text{DECAYING} & \text{if } D(s) < 0 \text{ AND } I_{\text{recent}}(s) < I_{\text{avg}}(s) \\
+\text{HEALTHY} & \text{otherwise}
+\end{cases}
+\end{equation}
+
+where $I_{\text{recent}}(s)$ = mean intensity for last 3 months, and $I_{\text{avg}}(s)$ = mean intensity for all months.
+
+\subsection{Data Cleaning Pipeline}
+
+\subsubsection{Geographic Normalization}
+State names were standardized to handle variations and legacy names:
+
+\begin{lstlisting}[caption={State Name Standardization (preprocessing.py)}]
+STATE_NAME_MAPPING = {
+    'ORISSA': 'ODISHA',
+    'PONDICHERRY': 'PUDUCHERRY',
+    'JAMMU & KASHMIR': 'JAMMU AND KASHMIR',
+    'DADRA & NAGAR HAVELI': 'DADRA AND NAGAR HAVELI AND DAMAN AND DIU',
+    # ... additional mappings
+}
+
+def standardize_state_names(df, state_column='state'):
+    df = df.copy()
+    df[state_column] = df[state_column].str.upper().str.strip()
+    df[state_column] = df[state_column].replace(STATE_NAME_MAPPING)
+    df = df[~df[state_column].isin(INVALID_STATE_ENTRIES)]
+    return df
+\end{lstlisting}
+
+\subsubsection{Temporal Alignment}
+\begin{itemize}[nosep]
+    \item Converted all dates to \texttt{YYYY-MM-DD} format
+    \item Aggregated data to monthly granularity
+    \item Forward-filled missing months (conservative approach)
+\end{itemize}
+
+\subsection{Feature Engineering}
+
+\begin{lstlisting}[caption={Core Feature Engineering (metrics.py)}]
+def compute_rolling_average(series, window=3):
+    """Compute rolling mean with safe minimum periods."""
+    return series.rolling(window, min_periods=1).mean()
+
+def compute_decay_signal(series):
+    """
+    Simple decay signal based on average month-to-month change.
+    Negative values indicate decline.
+    """
+    if series is None or len(series) < 2:
+        return 0.0
+    diff = series.diff().mean()
+    return 0.0 if math.isnan(diff) else diff
+
+def classify_state(avg_update_intensity, recent_update_intensity, decay_signal):
+    """Rule-based state classification."""
+    STAGNANT_THRESHOLD = 1e-6
+    if abs(avg_update_intensity) < STAGNANT_THRESHOLD:
+        return "STAGNANT"
+    
+    DECAY_THRESHOLD = -0.01  # 1% decline threshold
+    if decay_signal < DECAY_THRESHOLD and recent_update_intensity < avg_update_intensity:
+        return "DECAYING"
+    
+    return "HEALTHY"
+\end{lstlisting}
+
+\subsection{Statistical Analysis Methods}
+
+\subsubsection{Mann-Kendall Trend Test}
+A non-parametric test for detecting monotonic trends in time series data.
+
+\textbf{Test Statistic:}
+\begin{equation}
+S = \sum_{i=1}^{n-1} \sum_{j=i+1}^{n} \text{sign}(x_j - x_i)
+\end{equation}
+
+\begin{equation}
+Z = \frac{S - 1}{\sqrt{\text{Var}(S)}} \quad \text{if } S > 0
+\end{equation}
+
+\textbf{Null Hypothesis ($H_0$):} No trend exists in the time series.
+
+\textbf{Decision Rule:} Reject $H_0$ if $p$-value $< 0.05$
+
+\textbf{Results:} 26 states show statistically significant declining trends; Kendall's $\tau$ ranges from $-0.85$ to $+0.42$.
+
+\subsubsection{Effect Size (Cohen's $d$)}
+Quantifies the practical significance of decay:
+
+\begin{equation}
+d = \frac{\mu_{\text{recent}} - \mu_{\text{early}}}{\sigma_{\text{pooled}}}
+\end{equation}
+
+\textbf{Interpretation:}
+\begin{itemize}[nosep]
+    \item $|d| < 0.2$: Negligible effect
+    \item $0.2 \leq |d| < 0.5$: Small effect
+    \item $0.5 \leq |d| < 0.8$: Medium effect
+    \item $|d| \geq 0.8$: Large effect
+\end{itemize}
+
+\textbf{Results:} 7 states exhibit large effect decay ($d < -0.8$); Puducherry shows the largest effect ($d = -2.34$).
+
+\subsubsection{Confidence Intervals}
+95\% confidence intervals calculated using the $t$-distribution, accounting for sample size and variance.
+
+\subsection{Priority Ranking Algorithm}
+
+\textbf{Risk Score Calculation:}
+\begin{equation}
+\text{risk\_score} = (-1 \times \text{decay\_signal}) + (0.5 \times \text{volatility}) + \frac{1}{\text{recent\_intensity} + 1}
+\end{equation}
+
+\textbf{Rationale:}
+\begin{itemize}[nosep]
+    \item \textbf{Decay term}: Higher penalty for steeper decline
+    \item \textbf{Volatility term}: Unstable states need attention
+    \item \textbf{Recency term}: Inverse weighting favors currently low performers
+\end{itemize}
+
+\subsection{Forecasting: ARIMA Model}
+
+\textbf{Model:} ARIMA(1,0,1) --- AutoRegressive Integrated Moving Average
+
+\textbf{Parameters:}
+\begin{itemize}[nosep]
+    \item $p=1$: One lag of autoregressive term
+    \item $d=0$: No differencing (stationary data)
+    \item $q=1$: One lag of moving average
+\end{itemize}
+
+\textbf{Selection Criteria:} Akaike Information Criterion (AIC)
+
+\textbf{Forecast Horizon:} 3 months with 95\% confidence intervals
+
+% ============================================================================
+% SECTION 4: DATA ANALYSIS AND VISUALIZATION
+% ============================================================================
+\newpage
+\section{Data Analysis and Visualization}
+
+\subsection{Key Findings}
+
+\subsubsection{National Overview}
+\begin{itemize}[nosep]
+    \item \textbf{36 states/UTs analyzed} with over 1.2 million data points
+    \item \textbf{72\%} of states show statistically significant trends (\texorpdfstring{$p < 0.10$}{p < 0.10})
+    \item \textbf{26 states} have declining trends (\texorpdfstring{$p < 0.05$}{p < 0.05})
+    \item \textbf{7 states} require immediate intervention (large effect decay)
+\end{itemize}
+
+\subsubsection{Top Decaying States}
+\begin{table}[H]
+\centering
+\caption{States with Largest Effect Size Decay}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{State} & \textbf{Early Mean} & \textbf{Recent Mean} & \textbf{Change \%} & \textbf{Cohen's d} \\
+\midrule
+Puducherry & 2168 & 486 & -77.6\% & -2.34 \\
+Himachal Pradesh & 1245 & 576 & -53.7\% & -1.89 \\
+Ladakh & 892 & 421 & -52.8\% & -1.76 \\
+Chandigarh & 1034 & 512 & -50.5\% & -1.62 \\
+Goa & 876 & 445 & -49.2\% & -1.45 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Regional Patterns}
+States classified into 6 geographical regions reveal distinct patterns:
+
+\begin{table}[H]
+\centering
+\caption{Regional Performance Summary}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Region} & \textbf{States} & \textbf{Mean Intensity} & \textbf{Avg Decay} \\
+\midrule
+Northeast & 8 & High & -2.1\% \\
+Central & 3 & Medium-High & -8.4\% \\
+East & 4 & Medium & -12.3\% \\
+South & 6 & Medium & -15.7\% \\
+North & 8 & Variable & -18.2\% \\
+West & 5 & Low-Medium & -21.5\% \\
+Islands & 2 & High Volatility & Variable \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Finding:} Northeast region shows the lowest decay rate (\texorpdfstring{$-2.1\%$}{-2.1 percent} average), demonstrating consistent update engagement.
+
+\subsection{Visualizations}
+
+\subsubsection{Correlation Analysis}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{data/correlation_heatmap.png}
+\caption{9$\times$9 Correlation Matrix: Relationships between all metrics including enrolment counts, demographic updates, biometric updates, and derived features. Strong positive correlations observed between age groups within the same category.}
+\label{fig:correlation}
+\end{figure}
+
+\subsubsection{State-wise Geographic Distribution}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{data/india_state_visualization.png}
+\caption{Geographic distribution of update intensity across Indian states. Darker shades indicate higher update activity; lighter shades indicate states requiring attention.}
+\label{fig:india_map}
+\end{figure}
+
+\subsubsection{Regional Performance Comparison}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{data/regional_comparison.png}
+\caption{Performance comparison across 6 geographical regions. Bar heights represent mean update intensity; annotations show state counts per region.}
+\label{fig:regional}
+\end{figure}
+
+\subsubsection{Forecasting Results}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{data/forecasts_visualization.png}
+\caption{3-month ARIMA predictions for all states with 95\% confidence intervals. Shaded regions represent uncertainty bounds; solid lines show predicted trajectories.}
+\label{fig:forecasts}
+\end{figure}
+
+\subsubsection{Statistical Confidence}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{data/confidence_intervals.png}
+\caption{95\% confidence intervals for state-level update intensity estimates. Error bars show uncertainty in mean estimates; states ordered by intensity.}
+\label{fig:confidence}
+\end{figure}
+
+\subsection{Interactive Dashboard}
+
+The complete analytical system is deployed as an interactive Streamlit dashboard with 5 comprehensive pages:
+
+\begin{enumerate}[nosep]
+    \item \textbf{Overview}: KPIs, state insights, priority matrix, trend charts
+    \item \textbf{Statistical Analysis}: Summary stats, benchmarking, correlation matrix, effect sizes
+    \item \textbf{Geographic Insights}: Interactive India map, regional performance, state breakdown
+    \item \textbf{Forecasting}: ARIMA predictions with confidence intervals, scenario analysis
+    \item \textbf{State Deep Dive}: Detailed time series and metrics for selected state
+\end{enumerate}
+
+\textbf{Live Dashboard:} \url{https://uidai-analytical-dash.streamlit.app}
+
+% ============================================================================
+% SECTION 5: IMPACT AND APPLICABILITY
+% ============================================================================
+\newpage
+\section{Impact and Applicability}
+
+\subsection{Administrative Benefits}
+
+\subsubsection{Early Warning System}
+The framework provides \textbf{3--6 month advance warning} before states reach critical update thresholds, enabling:
+\begin{itemize}[nosep]
+    \item Proactive resource allocation to at-risk regions
+    \item Targeted awareness campaigns before decay becomes severe
+    \item Evidence-based policy adjustments
+\end{itemize}
+
+\subsubsection{Resource Optimization}
+By identifying the \textbf{top 10 priority states} for intervention, administrators can:
+\begin{itemize}[nosep]
+    \item Focus limited resources on highest-impact regions
+    \item Reduce wasted effort on already-healthy states
+    \item Measure intervention effectiveness through trend monitoring
+\end{itemize}
+
+\subsection{Quantified Impact}
+
+\begin{table}[H]
+\centering
+\caption{Solution Impact Metrics}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+States/UTs Analyzed & 36 (100\% coverage) \\
+Data Points Processed & 1.2M+ \\
+Declining States Identified & 26 \\
+Critical States (Large Effect) & 7 \\
+Forecast Horizon & 3 months \\
+Confidence Level & 95\% \\
+Early Warning Lead Time & 3--6 months \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Policy Recommendations}
+
+Based on our analysis, we recommend:
+
+\begin{enumerate}
+    \item \textbf{Immediate Intervention}: Deploy awareness campaigns in the 7 large-effect-decay states (Puducherry, Himachal Pradesh, Ladakh, Chandigarh, Goa, etc.)
+    
+    \item \textbf{Regional Strategy}: Leverage Northeast region's success patterns for cross-state learning initiatives
+    
+    \item \textbf{Monitoring Framework}: Implement monthly dashboard reviews using the priority ranking system
+    
+    \item \textbf{Predictive Maintenance}: Use ARIMA forecasts to anticipate resource needs 3 months in advance
+\end{enumerate}
+
+\subsection{Scalability and Feasibility}
+
+\begin{itemize}[nosep]
+    \item \textbf{Technical}: Built on open-source stack (Python, Streamlit, Pandas) with zero licensing costs
+    \item \textbf{Operational}: Dashboard loads in \texorpdfstring{$<$}{<}3 seconds with cached data
+    \item \textbf{Extensibility}: Modular codebase supports district-level drill-down when data becomes available
+    \item \textbf{Reproducibility}: All notebooks documented for audit and replication
+\end{itemize}
+
+% ============================================================================
+% SECTION 6: CODE APPENDIX
+% ============================================================================
+\newpage
+\section{Code Appendix}
+
+\subsection{Project Structure}
+\begin{lstlisting}[language=bash, caption={Repository Structure}]
+UIDAI-Analytical-Dashboard/
+|-- app.py                    # Streamlit dashboard (main entry)
+|-- requirements.txt          # Python dependencies
+|-- README.md                 # Project documentation
+|-- METHODOLOGY.md            # Technical documentation
+|
+|-- data/
+|   |-- feature_engineered_monthly.csv
+|   |-- state_priority_classification_final.csv
+|   |-- statistical_summary.csv
+|   |-- regional_summary.csv
+|   |-- state_forecasts_3month.csv
+|   |-- correlation_heatmap.png
+|   |-- india_state_visualization.png
+|   `-- (additional CSV/PNG files)
+|
+|-- notebooks/
+|   |-- 01_data_ingestion_and_schema_check.ipynb
+|   |-- 02_data_cleaning_and_alignment.ipynb
+|   |-- 03_feature_engineering.ipynb
+|   |-- 04_analysis_and_visuals.ipynb
+|   |-- 05_anomaly_detection_optional.ipynb
+|   |-- 06_statistical_analysis.ipynb
+|   |-- 07_geospatial_viz.ipynb
+|   `-- 08_forecasting.ipynb
+|
+`-- src/
+    |-- __init__.py
+    |-- config.py
+    |-- ingestion.py
+    |-- preprocessing.py
+    |-- metrics.py
+    `-- visualization.py
+\end{lstlisting}
+
+\subsection{Main Dashboard Application}
+
+\begin{lstlisting}[caption={Streamlit Dashboard (app.py) - Core Structure}]
+import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+from src.ingestion import load_monthly_features, load_priority_table
+
+# Page Configuration
+st.set_page_config(
+    page_title="UIDAI Dashboard",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Load Data with Caching
+@st.cache_data
+def load_data():
+    monthly = load_monthly_features("data/feature_engineered_monthly.csv")
+    priority = load_priority_table("data/state_priority_classification_final.csv")
+    
+    analytics = {}
+    files_to_load = [
+        ('stat_summary', 'data/statistical_summary.csv'),
+        ('regional', 'data/regional_summary.csv'),
+        ('forecasts', 'data/state_forecasts_3month.csv'),
+        ('benchmarking', 'data/state_benchmarking.csv'),
+        ('effect_size', 'data/effect_size_analysis.csv')
+    ]
+    
+    for name, path in files_to_load:
+        if os.path.exists(path):
+            analytics[name] = pd.read_csv(path)
+        else:
+            analytics[name] = pd.DataFrame()
+    
+    return monthly, priority, analytics
+
+df_monthly, df_priority, analytics = load_data()
+
+# Navigation
+page = st.sidebar.radio(
+    "Select Page",
+    ["Overview", "Statistical Analysis", "Geographic Insights", 
+     "Forecasting", "State Details"]
+)
+
+# KPI Display (Overview Page)
+if page == "Overview":
+    col1, col2, col3 = st.columns(3)
+    
+    total = len(df_priority)
+    decaying = (df_priority["state_status"] == "DECAYING").sum()
+    healthy = (df_priority["state_status"] == "HEALTHY").sum()
+    
+    with col1:
+        st.metric("Healthy States", healthy, delta="Good Performance")
+    with col2:
+        st.metric("Decaying States", decaying, delta="Needs Attention")
+    with col3:
+        st.metric("Total States", total, delta="Complete Coverage")
+\end{lstlisting}
+
+\subsection{Visualization Module}
+
+\begin{lstlisting}[caption={Chart Generation (visualization.py)}]
+import plotly.express as px
+
+def low_update_bar_chart(df, color):
+    """Horizontal bar chart showing states with low update intensity."""
+    fig = px.bar(
+        df,
+        x="avg_update_intensity",
+        y="state",
+        orientation="h",
+        title="States with Persistently Low Update Activity",
+        labels={
+            "avg_update_intensity": "Average Update Intensity",
+            "state": "State"
+        },
+        color_discrete_sequence=[color]
+    )
+    return fig
+
+def update_trend_chart(df, colors, state_name):
+    """Line chart showing update intensity trend for a selected state."""
+    fig = px.line(
+        df,
+        x="year_month",
+        y=["update_intensity", "update_intensity_3m_avg"],
+        title=f"Update Intensity Trend: {state_name}",
+        labels={
+            "year_month": "Month",
+            "value": "Update Intensity",
+            "variable": "Metric"
+        },
+        color_discrete_sequence=colors
+    )
+    return fig
+\end{lstlisting}
+
+% ============================================================================
+% SECTION 7: REPRODUCIBILITY
+% ============================================================================
+\newpage
+\section{Reproducibility}
+
+\subsection{Environment Requirements}
+
+\begin{lstlisting}[language=bash, caption={Python Dependencies (requirements.txt)}]
+streamlit>=1.28.0
+pandas>=2.0.0
+plotly>=5.17.0
+matplotlib>=3.7.0
+scipy>=1.10.0
+statsmodels>=0.14.0
+numpy>=1.24.0
+Pillow>=10.0.0
+\end{lstlisting}
+
+\subsection{Execution Steps}
+
+\begin{lstlisting}[language=bash, caption={Running the Project}]
+# 1. Clone repository
+git clone https://github.com/zubershk/UIDAI-Analytical-Dashboard
+cd UIDAI-Analytical-Dashboard
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run notebooks in sequence (01-08) for full pipeline
+jupyter notebook notebooks/
+
+# 4. Launch dashboard
+streamlit run app.py
+\end{lstlisting}
+
+\subsection{Validation Checklist}
+
+\begin{itemize}[nosep]
+    \item[\checkmark] No missing state-month combinations after imputation
+    \item[\checkmark] All update counts \texorpdfstring{$\geq 0$}{>= 0} (validated)
+    \item[\checkmark] Enrolment totals match aggregated sums
+    \item[\checkmark] Date chronology verified
+    \item[\checkmark] Mann-Kendall test: 72\% states have \texorpdfstring{$p<0.10$}{p<0.10}
+    \item[\checkmark] Correlation matrix: No multicollinearity (VIF \texorpdfstring{$< 5$}{< 5})
+    \item[\checkmark] ARIMA residuals: Normally distributed (Shapiro-Wilk \texorpdfstring{$p>0.05$}{p>0.05})
+    \item[\checkmark] Dashboard responsive on desktop/tablet/mobile
+    \item[\checkmark] Load time \texorpdfstring{$< 3$}{< 3} seconds (cached data)
+\end{itemize}
+
+% ============================================================================
+% SECTION 8: LIMITATIONS AND FUTURE WORK
+% ============================================================================
+\section{Limitations and Future Work}
+
+\subsection{Current Limitations}
+
+\begin{itemize}[nosep]
+    \item \textbf{Temporal Scope}: Only 12 months of data available
+    \item \textbf{Granularity}: State-level only (district-level data incomplete)
+    \item \textbf{Causality}: Cannot infer reasons for decay from data alone
+    \item \textbf{ARIMA Assumptions}: Assumes linear relationships and stationarity
+\end{itemize}
+
+\subsection{Proposed Enhancements}
+
+\subsubsection{Short-Term (1--3 months)}
+\begin{itemize}[nosep]
+    \item Add district-level drill-down (pending data availability)
+    \item Integrate demographic covariates (population, literacy)
+    \item Implement automated alerting system
+\end{itemize}
+
+\subsubsection{Medium-Term (3--6 months)}
+\begin{itemize}[nosep]
+    \item Build supervised ML model for classification
+    \item Add causal inference layer (difference-in-differences)
+    \item Develop mobile app version
+\end{itemize}
+
+\subsubsection{Long-Term (6--12 months)}
+\begin{itemize}[nosep]
+    \item Real-time data pipeline integration
+    \item Predictive maintenance for Aadhaar centers
+    \item Policy impact simulation engine
+\end{itemize}
+
+% ============================================================================
+% REFERENCES
+% ============================================================================
+\newpage
+\section{References}
+
+\begin{enumerate}
+    \item Mann, H. B. (1945). ``Nonparametric Tests Against Trend.'' \textit{Econometrica}, 13(3), 245--259.
+    
+    \item Cohen, J. (1988). \textit{Statistical Power Analysis for the Behavioral Sciences} (2nd ed.). Routledge.
+    
+    \item Box, G. E. P., \& Jenkins, G. M. (1970). \textit{Time Series Analysis: Forecasting and Control}. Holden-Day.
+    
+    \item Hyndman, R. J., \& Athanasopoulos, G. (2021). \textit{Forecasting: Principles and Practice} (3rd ed.). OTexts.
+    
+    \item UIDAI. (2026). ``Data Hackathon 2026: Unlocking Societal Trends in Aadhaar Enrolment and Updates.'' Official Challenge Documentation.
+\end{enumerate}
+
+% ============================================================================
+% ACKNOWLEDGMENTS
+% ============================================================================
+\section*{Acknowledgments}
+\addcontentsline{toc}{section}{Acknowledgments}
+
+I thank the Unique Identification Authority of India (UIDAI) for organizing the Data Hackathon 2026 and providing access to the anonymized datasets used in this analysis. All data handling adheres to the hackathon's privacy guidelines and ethical use requirements.
+
+% ============================================================================
+% END DOCUMENT
+% ============================================================================
+\vfill
+\begin{center}
+\rule{0.5\textwidth}{0.5pt}\\
+\vspace{0.5cm}
+{\large\bfseries\color{uidaiblue} UIDAI Data Hackathon 2026}\\
+\vspace{0.3cm}
+{\normalsize Strategic Analytical Dashboard for Enrolment Saturation \& Update Optimization}\\
+\vspace{0.3cm}
+{\small Submitted by Zuber Shaikh | January 2026}
+\end{center}
+
+\end{document}

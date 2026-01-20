@@ -207,50 +207,69 @@ def save_forecasts_to_csv(forecasts, output_path):
 
 
 def create_visualization(forecasts, output_path):
-    """Create visualization for all state forecasts."""
+    """Create visualization for all state forecasts matching original notebook style."""
     n_states = len(forecasts)
     
-    # Calculate grid dimensions (aim for roughly 6 columns)
-    n_cols = 6
+    # Calculate grid dimensions (5 rows x 2 columns layout like original, scaled up)
+    n_cols = 2
     n_rows = (n_states + n_cols - 1) // n_cols
     
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(24, 4 * n_rows))
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(14, 3.5 * n_rows))
     axes = axes.flatten() if n_states > 1 else [axes]
     
+    # Sort states alphabetically
     states_sorted = sorted(forecasts.keys())
     
     for idx, state in enumerate(states_sorted):
         ax = axes[idx]
         forecast = forecasts[state]
         
-        # Plot historical data
+        # Combine dates for x-axis
+        all_dates = list(forecast['historical_dates']) + list(forecast['forecast_dates'])
+        
+        # Plot historical data - blue line with circle markers
         ax.plot(forecast['historical_dates'], forecast['historical_values'], 
-                'b-', linewidth=1.5, label='Historical', alpha=0.7)
+                color='#1f77b4', linewidth=1.5, marker='o', markersize=5,
+                label='Historical')
         
-        # Plot forecast
+        # Plot forecast - orange dots
         ax.plot(forecast['forecast_dates'], forecast['forecast_values'], 
-                'r-', linewidth=2, label='Forecast', marker='o')
+                color='#ff7f0e', linewidth=0, marker='o', markersize=8,
+                label='Forecast')
         
-        # Plot confidence interval
+        # Plot confidence interval - light peach/orange shaded area
         ax.fill_between(forecast['forecast_dates'], 
                        forecast['lower_ci'], 
                        forecast['upper_ci'], 
-                       alpha=0.3, color='red', label='95% CI')
+                       alpha=0.3, color='#ffbb78', label='95% CI')
         
-        ax.set_title(state, fontsize=8, fontweight='bold')
-        ax.tick_params(axis='both', labelsize=6)
+        # Set title
+        ax.set_title(state, fontsize=10, fontweight='bold')
+        
+        # Set axis labels
+        ax.set_xlabel('Month', fontsize=8)
+        ax.set_ylabel('Update Intensity', fontsize=8)
+        
+        # Rotate x-axis labels
+        ax.tick_params(axis='both', labelsize=7)
         ax.tick_params(axis='x', rotation=45)
         
-        # Add grid
-        ax.grid(True, alpha=0.3)
+        # Add legend in upper right
+        ax.legend(loc='upper right', fontsize=7, framealpha=0.9)
+        
+        # Add light grid
+        ax.grid(True, alpha=0.3, linestyle='-', linewidth=0.5)
+        
+        # Set background color
+        ax.set_facecolor('white')
     
     # Hide empty subplots
     for idx in range(len(forecasts), len(axes)):
         axes[idx].set_visible(False)
     
-    plt.suptitle('3-Month ARIMA Forecasts for All States', fontsize=14, fontweight='bold', y=1.02)
+    plt.suptitle('3-Month Forecast: All States', fontsize=14, fontweight='bold', y=1.01)
     plt.tight_layout()
-    plt.savefig(output_path, dpi=150, bbox_inches='tight', facecolor='white')
+    plt.savefig(output_path, dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
     plt.close()
     
     print(f"Visualization saved to {output_path}")
