@@ -19,4 +19,4 @@ ENV/
 .DS_Store
 Thumbs.db
 .streamlit/secrets.toml
-*.log
+*.logUIDAI_Hackathon_Report.tex
