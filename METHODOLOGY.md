@@ -196,15 +196,22 @@ States classified into 6 regions:
 
 ## 6. Forecasting Methodology
 
-### 6.1 ARIMA Model Selection
-**Model**: ARIMA(1,0,1) - AutoRegressive Integrated Moving Average
+### 6.1 Robust ARIMA Model Selection
+**Model**: Auto-tuned ARIMA with fallback strategy
 
-**Parameters**:
-- p=1: One lag of autoregressive term
-- d=0: No differencing (stationary data)
-- q=1: One lag of moving average
+**Candidate Models Evaluated (in order):**
+1. ARIMA(1,0,1) - Balanced model (Primary)
+2. ARIMA(1,1,1) - With first differencing
+3. ARIMA(0,1,1) - Simple Exponential Smoothing
+4. ARIMA(1,0,0) - AR(1) process
+5. ARIMA(0,0,1) - MA(1) process
 
-**Selection Criteria**: Akaike Information Criterion (AIC)
+**Selection Logic**:
+- Attempt to fit models sequentially
+- Validate convergence and AIC scores
+- Fallback to Moving Average if all ARIMA models fail (robustness against data issues)
+
+**Coverage**: forecasts generated for **all 36 states/UTs**
 
 ### 6.2 Forecast Horizon
 - **Duration**: 3 months ahead
@@ -315,11 +322,9 @@ git clone https://github.com/zubershk/UIDAI-Analytical-Dashboard
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run notebooks in sequence (01-08)
-jupyter notebook notebooks/
-
-# 4. Launch dashboard
+# 3. Launch dashboard (Automated setup)
 streamlit run app.py
+# Note: The app automatically runs src/generate_all_forecasts.py on first launch
 ```
 
 ### 11.3 Expected Outputs
