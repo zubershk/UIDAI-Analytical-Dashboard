@@ -98,9 +98,6 @@ Our statistical analysis of Aadhaar update patterns across India reveals:
 ---
 
 ## Quick Start
-
-### Run Locally
-
 ```bash
 # 1. Clone the repository
 git clone https://github.com/zubershk/UIDAI-Analytical-Dashboard.git
@@ -112,8 +109,7 @@ pip install -r requirements.txt
 # 3. Launch dashboard
 streamlit run app.py
 ```
-
-The dashboard will open at `http://localhost:8501`
+The application will automatically perform initial setup and open at `http://localhost:8501`.
 
 ---
 

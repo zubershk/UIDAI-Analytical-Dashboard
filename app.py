@@ -22,6 +22,16 @@ def load_data():
     monthly = load_monthly_features("data/feature_engineered_monthly.csv")
     priority = load_priority_table("data/state_priority_classification_final.csv")
     
+    # Check if forecast file exists, if not generate it
+    forecast_path = "data/state_forecasts_3month.csv"
+    if not os.path.exists(forecast_path):
+        with st.spinner('Generating forecasts for the first time... (this may take a minute)'):
+            try:
+                from src.generate_all_forecasts import main as generate_forecasts
+                generate_forecasts()
+            except Exception as e:
+                st.error(f"Failed to generate forecasts: {str(e)}")
+
     # Load analytical CSVs with proper error handling
     analytics = {}
     files_to_load = [
