@@ -314,31 +314,6 @@ This regenerates `data/state_forecasts_3month.csv` and `data/forecasts_visualiza
 
 ---
 
-## Dependencies
-
-```txt
-streamlit>=1.28.0
-pandas>=2.0.0
-plotly>=5.17.0
-matplotlib>=3.7.0
-scipy>=1.10.0
-statsmodels>=0.14.0
-numpy>=1.24.0
-Pillow>=10.0.0
-```
-
-Install all: `pip install -r requirements.txt`
-
----
-
-### Run the Dashboard
-
-```bash
-streamlit run app.py
-```
-
----
-
 ## Data Usage
 
 ### Source
