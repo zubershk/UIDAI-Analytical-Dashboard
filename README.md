@@ -158,7 +158,8 @@ UIDAI-Analytical-Dashboard/
     ├── ingestion.py          # Data loading
     ├── preprocessing.py      # Data transformation
     ├── metrics.py            # Statistical calculations
-    └── visualization.py      # Chart generation
+    ├── visualization.py      # Chart generation
+    └── generate_all_forecasts.py  # ARIMA forecasting for all states
 ```
 
 ---
@@ -296,13 +297,20 @@ States grouped into 6 geographical regions:
 ## Forecasting
 
 ### ARIMA Models
-- **3-month ahead predictions** for top 10 decaying states
+- **3-month ahead predictions** for all 36 states/UTs
 - **95% confidence intervals** for all forecasts
+- **Robust error handling**: Multiple ARIMA orders with fallback strategies
 - **Scenario analysis**: Impact of +20% / +50% intervention
 
+### Regenerating Forecasts
+```bash
+python src/generate_all_forecasts.py
+```
+This regenerates `data/state_forecasts_3month.csv` and `data/forecasts_visualization.png`.
+
 ### Sample Predictions
-- **Puducherry**: 486 → 398 (continued decline without intervention)
-- **Himachal Pradesh**: 576 → 512 (requires engagement campaign)
+- **Puducherry**: Continued decline without intervention
+- **Himachal Pradesh**: Requires engagement campaign
 
 ---
 
