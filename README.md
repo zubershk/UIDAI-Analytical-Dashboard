@@ -4,31 +4,9 @@
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-green?logo=streamlit&logoColor=white)
 ![Analysis](https://img.shields.io/badge/Analysis-Statistical-orange)
-![License](https://img.shields.io/badge/License-Restricted-red)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 A **production-grade**, state-level analytical system to detect **declining Aadhaar update activity**, identify **priority regions**, and support **evidence-based administrative decision-making.**
-
----
-
-> **⚠️ INTELLECTUAL PROPERTY NOTICE**
-> 
-> This repository contains original work submitted for the **UIDAI Data Hackathon 2026**.
-> 
-> **Effective until:** January 20, 2026 (Competition Deadline)
-> 
-> **Restrictions:**
-> - Copying, forking, reproducing, or redistributing this code is **strictly prohibited**
-> - Derivative works based on this project are **not permitted**
-> - Viewing for reference purposes only
-> 
-> **Legal Framework:**
-> - Protected under the **Indian Copyright Act, 1957** (Section 14, 51)
-> - Protected under the **Information Technology Act, 2000** (Section 43, 66)
-> - Subject to **UIDAI Data Hackathon 2026 Terms & Conditions**
-> 
-> Unauthorized use may result in disqualification and legal action.
-> 
-> *This notice will be replaced with MIT License after the competition deadline.*
 
 ---
 
@@ -337,14 +315,27 @@ All datasets are **official UIDAI data** provided for the Data Hackathon 2026.
 
 ## License
 
-> ⚠️ **RESTRICTED LICENSE - COMPETITION SUBMISSION**
->
-> This project is protected intellectual property submitted for UIDAI Data Hackathon 2026.
-> See [LICENSE](LICENSE.md) file for full terms.
->
-> **Until January 20, 2026**: All rights reserved. No copying, forking, or redistribution permitted.
->
-> **After January 20, 2026**: Will be released under MIT License.
+MIT License
+
+Copyright (c) 2026 Zuber Shaikh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ---
 
